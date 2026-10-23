@@ -1,0 +1,90 @@
+name: Build Multi-Platform Releases (Linux & macOS)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to upload binaries to (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-linux:
+    name: Build Linux (.deb & .AppImage)
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libasound2-dev \
+            libx11-dev \
+            libxtst-dev
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build Linux Bundles
+        run: npm run tauri build
+
+      - name: Upload Linux Artifacts to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.inputs.release_tag || github.ref_name }}"
+          echo "Uploading Linux binaries to release $TAG..."
+          gh release upload "$TAG" src-tauri/target/release/bundle/deb/*.deb --clobber || true
+          gh release upload "$TAG" src-tauri/target/release/bundle/appimage/*.AppImage --clobber || true
+
+  build-macos:
+    name: Build macOS (.dmg)
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build macOS App & DMG
+        run: npm run tauri build
+
+      - name: Upload macOS Artifacts to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.inputs.release_tag || github.ref_name }}"
+          echo "Uploading macOS binaries to release $TAG..."
+          gh release upload "$TAG" src-tauri/target/release/bundle/dmg/*.dmg --clobber || true
