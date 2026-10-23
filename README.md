@@ -1,170 +1,271 @@
 <div align="center">
 
-  <img src="public/aabsara_logo.png" alt="AabSara Logo" width="140" style="border-radius: 28px; box-shadow: 0 10px 30px rgba(224, 182, 74, 0.35);" />
+  <img src="public/aabsara_logo.png" alt="AabSara Official Logo" width="140" style="border-radius: 28px; box-shadow: 0 10px 30px rgba(224, 182, 74, 0.4);" />
 
-  # 🎬 AabSara (আবসার)
-  ### The Ultimate 4K@120FPS Screen Recorder, RTMP Live Streamer & Video Editor Suite
+  # 🎬 AabSara (আবসারা)
+  ### Next-Gen 4K@120FPS Screen Recorder, RTMP Live Streamer & Video Editing Suite
 
   <p align="center">
-    <b>Every premium feature of Action!, Bandicam, and Camtasia — 100% Free, Open Source, and Lightweight.</b>
+    <b>Every premium feature of Mirillis Action!, Bandicam, and Camtasia — 100% Free, Open Source, and Ultra-Lightweight.</b><br/>
+    <i>Zero Watermarks · Zero Subscriptions · Zero Telemetry · Native Desktop & Android</i>
   </p>
 
-  [![GitHub Release](https://img.shields.io/github/v/release/CyberPrince-glitch/AabSara?style=for-the-badge&color=e0b64a)](https://github.com/CyberPrince-glitch/AabSara/releases/latest)
+  [![GitHub Release](https://img.shields.io/github/v/release/CyberPrince-glitch/AabSara?style=for-the-badge&color=e0b64a&logo=github)](https://github.com/CyberPrince-glitch/AabSara/releases/latest)
   [![License: MIT](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
-  [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20Android%20%7C%20Linux%20%7C%20macOS-blue?style=for-the-badge)](#-downloads)
-  [![Built with Tauri v2](https://img.shields.io/badge/Built%20With-Tauri%20v2%20%7C%20Rust%20%7C%20React%2019-3b82f6?style=for-the-badge)](https://tauri.app)
-  [![Support via Litecoin](https://img.shields.io/badge/Support-Litecoin%20(LTC)-345D9D?style=for-the-badge&logo=litecoin&logoColor=white)](#-support-the-creator-litecoin-ltc)
+  [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-3b82f6?style=for-the-badge)](#-official-downloads)
+  [![Built with Tauri v2](https://img.shields.io/badge/Built%20With-Tauri%20v2%20%7C%20Rust%20%7C%20React%2019-24c8db?style=for-the-badge&logo=tauri&logoColor=white)](https://v2.tauri.app)
+  [![Support via Litecoin](https://img.shields.io/badge/Donate-Litecoin%20(LTC)-345D9D?style=for-the-badge&logo=litecoin&logoColor=white)](#-support-the-creator-litecoin-ltc)
 
   ---
 
   <h3>
-    <a href="https://cyberprince-glitch.github.io/AabSara/">🌐 Official Website &amp; Landing Page</a>
+    <a href="https://cyberprince-glitch.github.io/AabSara/">🌐 Official Website</a>
     <span> · </span>
-    <a href="https://github.com/CyberPrince-glitch/AabSara/releases/latest">📥 Download Now</a>
+    <a href="#-official-downloads">📥 Downloads</a>
+    <span> · </span>
+    <a href="#-visual-interface-tour">📸 Screenshots</a>
     <span> · </span>
     <a href="#-key-features">✨ Features</a>
     <span> · </span>
-    <a href="#-comparison-matrix">📊 Comparison</a>
+    <a href="#-industry-comparison-matrix">📊 Comparison</a>
+    <span> · </span>
+    <a href="#-building-from-source">🛠️ Build from Source</a>
     <span> · </span>
     <a href="#-support-the-creator-litecoin-ltc">🪙 Donate (LTC)</a>
   </h3>
 
   ---
+
+  <p align="center">
+    <img src="docs/screenshots/app-main.png" alt="AabSara Studio Dashboard" width="100%" style="border-radius: 14px; border: 1px solid rgba(224, 182, 74, 0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.8);" />
+  </p>
+
 </div>
 
 <br/>
 
-## 🌟 What is AabSara?
+## 🌟 Overview: What is AabSara?
 
-**AabSara** is a state-of-the-art screen recording, game capture, RTMP live streaming, and video editing workstation crafted with **Rust**, **Tauri v2**, **React 19**, and **TypeScript**. 
+**AabSara** is a high-performance, hardware-accelerated screen recorder, gameplay capture system, RTMP live streaming broadcaster, and video editor designed for creators, gamers, educators, and developers. Built from the ground up using **Rust**, **Tauri v2**, **React 19**, and **TypeScript**, AabSara delivers studio-grade performance with an extraordinarily low resource footprint (~50MB RAM idle vs 400MB+ in legacy suites).
 
-Traditional screen recorders like Mirillis Action! and Bandicam charge \$35–\$50/year, watermark your clips, or choke low-spec laptops with 500MB+ of background RAM bloat. Camtasia charges \$299 upfront.
+### 💡 Why AabSara Exists
 
-**AabSara changes that forever.** It brings cinema-grade 4K@120FPS GPU encoding, multi-track audio, live webcam chroma-key (green screen), RTMP broadcasting, and a native Android companion app — with **zero subscriptions, zero watermarks, and zero compromises**.
+- **Commercial Recorders are Expensive and Bloated**: Tools like *Mirillis Action!* and *Bandicam* charge \$35–\$50 per year, enforce trial watermarks, or lock hardware encoders behind paywalls. *TechSmith Camtasia* costs \$299.
+- **OBS Studio is Powerful but Overkill for Quick Tasks**: While OBS is an industry standard, setting up scenes, audio loopback sinks, and output encoders for simple game recordings or quick tutorials requires steep learning curves and consumes hundreds of megabytes of RAM.
+- **AabSara Solves Both**: A complete, single-executable workstation that boots in milliseconds, records 4K at 120+ FPS with hardware GPU acceleration (NVIDIA NVENC, AMD AMF, Intel QSV), mixes multi-track audio, removes webcam backgrounds via green screen, broadcasts to YouTube/Twitch, trims recordings in-app, and includes a native Android companion app.
 
 ---
 
-## 📥 Downloads
+## 📥 Official Downloads
 
 Grab the latest production binaries directly from our [GitHub Releases](https://github.com/CyberPrince-glitch/AabSara/releases/latest):
 
-| Platform | Format | File Size | Description | Download |
-| :--- | :--- | :--- | :--- | :--- |
-| **Windows 10 / 11** | Installer (`.exe`) | **~2.26 MB** | Full setup wizard, start menu & desktop shortcuts | [**Download Installer**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Installer.exe) |
-| **Windows 10 / 11** | Portable (`.exe`) | **~6.41 MB** | Standalone binary. Zero installation, run anywhere | [**Download Portable**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Portable.exe) |
-| **Android 8.0+** | Package (`.apk`) | **~12.2 MB** | Optimized mobile app (`arm64-v8a`) with responsive UI | [**Download APK**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_v1.0.0_arm64.apk) |
-| **Linux & macOS** | AppImage / DMG | *In Progress* | Universal binary for Debian/Ubuntu/Arch & Apple Silicon | *Coming Soon* |
+| Platform / Operating System | Package Type | File Size | Description | Download Link |
+| :--- | :--- | :---: | :--- | :--- |
+| **Windows 10 / 11 (x64)** | Setup Installer (`.exe`) | **~2.26 MB** | Full installer with Desktop & Start Menu integration | [**Download Installer**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Installer.exe) |
+| **Windows 10 / 11 (x64)** | Portable (`.exe`) | **~6.41 MB** | Standalone single binary. Zero installation, run anywhere | [**Download Portable**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Portable.exe) |
+| **macOS (Apple Silicon)** | Disk Image (`.dmg`) | **~2.78 MB** | Universal drag-and-drop DMG for M1, M2, M3, and M4 Macs | [**Download DMG**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_aarch64.dmg) |
+| **Linux (Ubuntu / Debian)** | Package (`.deb`) | **~3.42 MB** | Native Debian/Ubuntu package (`sudo dpkg -i`) | [**Download DEB**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.deb) |
+| **Linux (Universal)** | Standalone (`.AppImage`) | **~78.2 MB** | Portable AppImage executable for all Linux distributions | [**Download AppImage**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.AppImage) |
+| **Android 8.0+** | Native APK (`arm64-v8a`) | **~12.2 MB** | Mobile responsive recording & streaming app for phones/tablets | [**Download APK**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_v1.0.0_arm64.apk) |
 
 ---
 
-## ✨ Key Features
+## 📸 Visual Interface Tour
 
-### 🖥️ Ultra-Low Overhead GPU Screen & Game Capture
-- **Hardware Encoders**: Native support for **NVIDIA NVENC**, **AMD AMF**, and **Intel QuickSync (QSV)** for near-zero CPU hit during gameplay.
-- **High Frame Rates**: Record silky-smooth **60 FPS, 120 FPS, and up to 240 FPS** in Full HD and **4K UHD**.
-- **Display Duplication & Window Capture**: Record full monitors, individual program windows, or custom snipped screen regions.
+Experience the clean, modern liquid-glass interface of AabSara across each core workflow:
+
+### 1. 🖥️ Unified Studio Workspace
+The central command center with real-time video canvas preview, live session telemetry, hardware status indicators, and one-click quick actions.
+
+<p align="center">
+  <img src="docs/screenshots/app-main.png" alt="AabSara Studio Dashboard" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 2. 🎬 4K@120FPS GPU Hardware Recording
+Direct hardware encoding with **NVIDIA NVENC**, **AMD AMF**, and **Intel QuickSync (QSV)**. Switch between full monitors, dedicated game windows, or custom screen regions with zero frame drops.
+
+<p align="center">
+  <img src="docs/screenshots/screen-recorder.png" alt="4K GPU Hardware Recorder" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 3. 🎚️ Multi-Track Pro Audio Mixer
+Discrete audio channels for WASAPI desktop loopback (game and system sounds) and microphone input. Includes real-time stereo dBVU peak meters and granular gain control.
+
+<p align="center">
+  <img src="docs/screenshots/audio-mixer.png" alt="Pro Audio Mixer Engine" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 4. 🟢 Real-Time Chroma-Key (Green Screen) WebCam
+Live webcam background subtraction with adjustable similarity and smoothness thresholds. Place circular or rectangular PIP overlays anywhere over your screen or gameplay.
+
+<p align="center">
+  <img src="docs/screenshots/chroma-overlay.png" alt="Chroma-Key WebCam Studio" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 5. ✂️ Integrated Lossless Video Trimmer
+Trim and clip your recordings immediately inside AabSara without launching heavy third-party NLEs. Non-destructive scrubber with frame-by-frame preview and instant export.
+
+<p align="center">
+  <img src="docs/screenshots/video-editor.png" alt="Integrated Video Trimmer" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 6. 📸 Precision Screen Snipper & Annotation
+Capture full displays, active application windows, or rectangular snips with instant lossless PNG preview and one-click clipboard copying.
+
+<p align="center">
+  <img src="docs/screenshots/screenshot-snipper.png" alt="Precision Screen Snipper" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+### 7. ℹ️ 100% Free, Open Source & Litecoin (LTC) Support
+Zero account registration, zero subscription lockouts, and zero telemetry tracking. Includes direct 1-click Litecoin (LTC) peer-to-peer creator support with zero intermediary fees.
+
+<p align="center">
+  <img src="docs/screenshots/about-modal.png" alt="About Dialog and LTC Support" width="95%" style="border-radius: 12px; border: 1px solid rgba(224, 182, 74, 0.3);" />
+</p>
+
+---
+
+## ✨ Key Features Breakdown
+
+### 🎮 Ultra-Low Overhead GPU Game & Screen Capture
+- **Hardware Encoders**: Native support for **NVIDIA NVENC** (HEVC/H.264), **AMD AMF**, **Intel QuickSync Video (QSV)**, and **Apple VideoToolbox**.
+- **High Refresh Rates**: Record buttery-smooth **60 FPS, 120 FPS, and up to 240 FPS** in 1080p Full HD, 1440p 2K, and 2160p 4K UHD.
+- **Zero Watermarks**: Free means completely unrestricted. No trial stamps, time limits, or resolution caps.
+- **Flexible Capture Modes**: Full monitor capture, specific application window capture, or interactive snipped region selection.
 
 ### 📡 Multi-Platform RTMP Live Streaming
-- Broadcast directly to **YouTube Live**, **Twitch**, and **Facebook Live**.
-- Robust reconnect engine with live bitrate telemetry, FPS counter, dropped-frame protection, and stream duration counter.
+- Broadcast directly to **YouTube Live**, **Twitch**, **Facebook Live**, and **Kick**.
+- Real-time stream telemetry: live bitrate indicator, current FPS counter, frame drop detection, and session uptime clock.
+- Resilient reconnect handling to keep your broadcast active during temporary network fluctuations.
 
-### 🎙️ Multi-Track Audio Engine
-- Record system sounds (WASAPI loopback) and microphone audio on separate channels.
-- Real-time stereo audio level meters (dBVU gauges) with gain controls.
+### 🎙️ Multi-Channel Audio Loopback
+- Independent audio tracks for system audio (WASAPI loopback) and microphone audio.
+- Real-time dual stereo dBVU peak level monitors.
+- Independent volume sliders, mute switches, and mic boost gain controls.
 
 ### 🟢 Studio WebCam & Chroma-Key (Green Screen)
 - Seamless real-time green screen removal with configurable similarity and smoothness thresholds.
 - Picture-in-Picture webcam overlay with circular, square, and rounded borders.
 - Interactive positioning directly over the canvas preview.
 
-### ✂️ Integrated Video Editor & Trimmer
-- Trim, cut, preview, and re-export recordings without launching heavy third-party NLE software.
-- High-speed remuxing and lossless export.
+### ✂️ Non-Destructive Video Trimmer
+- Built-in video editor to preview, scrub, and clip recordings right after capture.
+- Set In/Out markers on the interactive timeline.
+- High-speed lossless export without re-encoding delays.
 
-### 📱 100% Mobile Responsive Android Companion
-- Native Android app powered by Tauri v2 and Rust cdylib.
-- Fluid mobile responsive layout adapting from 4K desktop ultrawides down to phone screens.
+### 📱 Native Android Mobile Companion
+- Native Android app powered by Tauri v2 and Rust cdylib (`libaabsara_lib.so`).
+- Fluid touch-optimized layout responsive from 4K ultrawides down to mobile phone screens.
 
 ---
 
-## 📊 Comparison Matrix
+## 📊 Industry Comparison Matrix
 
-See how AabSara outperforms expensive commercial screen recording suites:
+See how AabSara compares against standard commercial and open-source recording solutions:
 
-| Feature | **AabSara** | Mirillis Action! | Bandicam | TechSmith Camtasia | OBS Studio |
+| Feature / Metric | **AabSara** | Mirillis Action! | Bandicam | TechSmith Camtasia | OBS Studio |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Price** | **100% FREE** | \$37.95 / year | \$44.95 / year | \$299.00 | Free |
-| **Watermarks** | **None. Ever.** | On free version | On free version | On free version | None |
-| **GPU Hardware Encoding** | **NVENC / AMF / QSV** | Yes | Yes | Limited | Yes |
-| **4K @ 120+ FPS Recording** | **Yes** | Yes | Yes | No (60 FPS max) | Yes |
-| **Built-in Video Trimmer** | **Yes** | Yes (basic) | Bandicut (Paid \$29) | Yes | No |
-| **Green Screen Chroma Key** | **Yes (Built-in)** | Yes | No | Yes | Plugin/Filter |
+| **Pricing Model** | **100% FREE** | \$37.95 / year | \$44.95 / year | \$299.00 upfront | Free |
+| **Watermarks** | **None. Ever.** | On Free Trial | On Free Trial | On Free Trial | None |
+| **GPU Hardware Encoders** | **NVENC / AMF / QSV** | Yes | Yes | Limited | Yes |
+| **4K @ 120+ FPS Capture** | **Yes** | Yes | Yes | No (60 FPS max) | Yes |
+| **Built-in Video Trimmer** | **Yes (Lossless)** | Basic | Paid Addon (\$29) | Yes | No |
+| **Chroma-Key Green Screen** | **Yes (Built-in)** | Yes | No | Yes | Filter/Plugin |
 | **RTMP Live Streaming** | **Yes** | Yes | No | No | Yes |
-| **Android APK App** | **Yes (Native arm64)** | No | No | No | No |
-| **RAM Footprint** | **~45 - 65 MB** | ~180 MB | ~150 MB | ~850 MB+ | ~300 - 500 MB |
-| **Open Source (MIT)** | **Yes** | No | No | No | Yes (GPL) |
+| **Android Mobile App** | **Yes (`.apk`)** | No | No | No | No |
+| **Idle Memory (RAM)** | **~45 - 65 MB** | ~180 MB | ~150 MB | ~850 MB+ | ~300 - 500 MB |
+| **Installer Size** | **~2.26 MB** | ~105 MB | ~32 MB | ~350 MB | ~130 MB |
+| **Open Source License** | **MIT License** | Proprietary | Proprietary | Proprietary | GPL v2.0 |
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## 🛠️ Architecture & Technology Stack
 
 ```
    ┌────────────────────────────────────────────────────────┐
-   │                  AabSara Desktop & Mobile              │
+   │            AabSara Desktop & Mobile Suite              │
    ├────────────────────────────────────────────────────────┤
-   │  Frontend UI: React 19 + TypeScript + Vite + Tailwind  │
+   │  Frontend: React 19 + TypeScript + Vite 8 + CSS Glass  │
    │  Fluid Canvas Compositor · Audio Visualizer · Editor   │
    ├───────────────────────────┬────────────────────────────┤
    │      Tauri v2 IPC         │       WebView2 / JNI       │
    ├───────────────────────────┴────────────────────────────┤
    │  Backend Engine: Rust Core (src-tauri)                 │
-   │  ├─ DXGI / WASAPI Low-Latency Desktop Capture          │
-   │  ├─ FFmpeg Hardware Acceleration Pipeline (NVENC/AMF)  │
+   │  ├─ DXGI Desktop Duplication & WASAPI Loopback Audio   │
+   │  ├─ FFmpeg Hardware Pipeline (NVENC, AMF, QSV)         │
    │  ├─ RTMP Streaming Engine & Connection Manager         │
-   │  └─ Native Android jniLibs / libaabsara_lib.so         │
+   │  └─ Native Android JNI Bridge (libaabsara_lib.so)      │
    └────────────────────────────────────────────────────────┘
 ```
 
-- **Frontend**: [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Vite 8](https://vitejs.dev/), Lucide Icons
-- **Desktop Runtime**: [Tauri v2](https://v2.tauri.app/) (Rust 1.85+, WebView2 on Windows)
-- **Mobile Engine**: Android NDK 26.1, SDK API 36, Kotlin 2.2, Android Gradle Plugin 9.3
-- **Media Pipeline**: Hardware accelerated FFmpeg (H.264, HEVC/H.265, AV1, AAC)
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **Core Backend** | [Rust](https://www.rust-lang.org/) (2021 Edition) | Low-level OS window capture, thread management, audio routing |
+| **App Runtime** | [Tauri v2](https://v2.tauri.app/) | Ultra-compact application bundle, native system tray, cross-platform IPC |
+| **Frontend Framework** | [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) | High-performance reactive UI with zero layout shifts |
+| **Bundler & Tooling** | [Vite 8](https://vite.js.dev/) | Sub-second HMR and optimized production asset minification |
+| **Media Pipeline** | [FFmpeg](https://ffmpeg.org/) (NVENC, AMF, QSV, VA-API) | Cinema-grade hardware encoding, audio mixing, and RTMP streaming |
+| **Android Engine** | Android NDK 26.1 + Gradle + JNI | High-efficiency ARM64 mobile execution |
 
 ---
 
 ## 🚀 Building from Source
 
 ### Prerequisites
-1. **Node.js** (v18 or higher) & `npm`
+1. **Node.js** (v18 or higher) and `npm`
 2. **Rust** toolchain:
-   ```powershell
+   ```bash
    rustup default stable
    ```
 3. **FFmpeg** installed and accessible in your system `PATH`.
+4. Platform-specific build tools:
+   - **Windows**: Microsoft C++ Build Tools (MSVC)
+   - **Linux**: `libwebkit2gtk-4.1-dev`, `libappindicator3-dev`, `librsvg2-dev`, `patchelf`, `libasound2-dev`
+   - **macOS**: Xcode Command Line Tools (`xcode-select --install`)
+   - **Android**: Android SDK (API 34+) and NDK (r26b+)
 
-### Clone & Run Desktop App
+### 1. Clone the Repository
 ```bash
-# 1. Clone repository
 git clone https://github.com/CyberPrince-glitch/AabSara.git
 cd AabSara
+```
 
-# 2. Install dependencies
+### 2. Install Node Dependencies
+```bash
 npm install
+```
 
-# 3. Launch live development mode
+### 3. Launch Development Mode
+```bash
 npm run tauri dev
+```
 
-# 4. Compile optimized Windows release binaries
+### 4. Build Production Desktop Binaries
+```bash
+# Builds Windows (.exe), Linux (.deb & .AppImage), or macOS (.dmg) depending on host OS
 npm run tauri build
 ```
 
-### Build Android APK
+### 5. Build Android APK
 ```powershell
-# Set Android environment
-$env:ANDROID_HOME = "D:\01-Development\AI-ML\android-build-tools\android-sdk"
-$env:NDK_HOME = "D:\01-Development\AI-ML\android-build-tools\android-sdk\ndk\26.1.10909125"
+# Set Android environment variables
+$env:ANDROID_HOME = "path/to/android-sdk"
+$env:NDK_HOME = "path/to/android-ndk"
 
-# Compile Android arm64-v8a APK
+# Compile Android arm64-v8a Release APK
 cd src-tauri\gen\android
 .\gradlew assembleArm64Release --no-configuration-cache
 ```
@@ -173,18 +274,18 @@ cd src-tauri\gen\android
 
 ## 🪙 Support the Creator (Litecoin LTC)
 
-AabSara is 100% free and open source. We do not run ads, collect user telemetry, sell commercial tiers, or charge subscriptions.
+AabSara is 100% free and open source. We do not sell user data, inject sponsor watermarks, or gate features behind paid licenses.
 
-If AabSara saves you money and helps your content creation or game streams, you can support the solo developer directly with **zero middleman fees** via **Litecoin (LTC)**:
+If AabSara saves you money on recording software or powers your YouTube, Twitch, or educational videos, you can support continuous open-source development directly via **Litecoin (LTC)**:
 
 <div align="center">
   <br/>
   <table>
     <tr>
       <td align="center">
-        <b>Official Litecoin (LTC) Address</b><br/><br/>
+        <b>🪙 Official Litecoin (LTC) Contribution Address</b><br/><br/>
         <code>LKbYGyKFQsMtxP4ezZky5Q2DPMbGxqKKyp</code><br/><br/>
-        <i>100% of all contributions go directly toward hardware testing, GPU optimizations, and open-source development.</i>
+        <i>100% of all contributions go directly toward hardware test rigs, GPU profiling, and open-source updates. Zero middleman cuts.</i>
       </td>
     </tr>
   </table>
@@ -193,13 +294,19 @@ If AabSara saves you money and helps your content creation or game streams, you 
 
 ---
 
+## 🔍 SEO & Search Discovery Tags
+
+`free screen recorder` · `open-source screen recorder` · `4K 120FPS game recorder` · `gameplay capture` · `NVIDIA NVENC recorder` · `AMD AMF recorder` · `Intel QuickSync video recorder` · `Bandicam alternative` · `Action recorder alternative` · `Camtasia alternative` · `OBS Studio lightweight alternative` · `RTMP live stream` · `YouTube Live recorder` · `Twitch streaming software` · `Chroma key webcam` · `green screen screen recorder` · `WASAPI audio loopback` · `lossless video trimmer` · `Tauri v2 screen recorder` · `Rust screen capture` · `Android screen recorder APK` · `portable screen recorder` · `no watermark screen recorder`
+
+---
+
 ## 📄 License
 
-Distributed under the **MIT License**. Free for personal, educational, commercial, and streaming use. See [`LICENSE`](LICENSE) for details.
+Distributed under the **MIT License**. Free for personal, commercial, academic, and streaming use. See [`LICENSE`](LICENSE) for complete legal terms.
 
 ---
 
 <div align="center">
-  <b>Made with ❤️ by Cyber Prince (<a href="https://github.com/CyberPrince-glitch">@CyberPrince-glitch</a>)</b><br/>
+  <b>Developed with precision by Cyber Prince (<a href="https://github.com/CyberPrince-glitch">@CyberPrince-glitch</a>)</b><br/>
   <i>Empowering creators worldwide with free, uncompromised screen recording tools.</i>
 </div>
