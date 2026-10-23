@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AabSara — Free Screen &amp; Game Recorder | Every Premium Feature For $0</title>
   <meta name="description" content="AabSara: free, open-source screen and game recorder. 4K@120FPS, GPU encoding, green screen, live streaming — every premium feature of Action!, Bandicam and Camtasia, for zero dollars." />
+  <meta name="google-site-verification" content="v4XeoNKtV7Adhzle8RKybi5jxQz20KYR2yY4-G-97dQ" />
+
   <link rel="icon" type="image/png" href="public/aabsara_logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -592,7 +594,7 @@
     .verdict span { color: var(--ink-dim); font-size: 14px; }
 
     /* ── Download cards (tall, gold-framed) ────────────────────────────── */
-    .grid-dl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .grid-dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px; }
 
     .dcard {
       position: relative;
@@ -711,7 +713,266 @@
       *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
       html { scroll-behavior: auto; }
     }
-  </style>
+  
+    /* ── Screenshots Showcase Section ───────────────────────────────────── */
+    .showcase-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 4px 18px;
+      margin-bottom: 24px;
+      justify-content: flex-start;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(224,182,74,0.4) transparent;
+    }
+    @media (min-width: 900px) {
+      .showcase-tabs { justify-content: center; flex-wrap: wrap; }
+    }
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--ink-dim);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
+    .tab-btn:hover {
+      color: var(--gold-lit);
+      border-color: rgba(224, 182, 74, 0.5);
+      background: rgba(224, 182, 74, 0.08);
+      transform: translateY(-2px);
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(224,182,74,0.3) 0%, rgba(224,182,74,0.1) 100%);
+      border-color: var(--gold);
+      box-shadow: 0 0 20px -4px rgba(224, 182, 74, 0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .tab-btn svg { stroke: currentColor; flex-shrink: 0; }
+
+    .showcase-stage {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(224, 182, 74, 0.38);
+      background: rgba(8, 7, 18, 0.88);
+      box-shadow: 0 32px 80px -20px rgba(0,0,0,0.85), 0 0 50px -15px rgba(224,182,74,0.3);
+      transition: transform 0.3s ease;
+    }
+    .window-chrome {
+      background: linear-gradient(180deg, rgba(20, 18, 38, 0.95), rgba(12, 10, 26, 0.95));
+      border-bottom: 1px solid rgba(224, 182, 74, 0.22);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .win-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 70px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-close { background: #ff5f56; }
+    .dot-min   { background: #ffbd2e; }
+    .dot-max   { background: #27c93f; }
+
+    .win-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--ink-dim);
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .win-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(224, 182, 74, 0.16);
+      border: 1px solid rgba(224, 182, 74, 0.4);
+      color: var(--gold-lit);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .win-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .win-full-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: rgba(224, 182, 74, 0.1);
+      border: 1px solid rgba(224, 182, 74, 0.35);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .win-full-link:hover {
+      background: rgba(224, 182, 74, 0.25);
+      color: #fff;
+    }
+
+    .showcase-viewport {
+      position: relative;
+      background: #040409;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1366 / 730;
+      max-height: 640px;
+    }
+    .showcase-main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .showcase-main-img.fade-out {
+      opacity: 0.2;
+      transform: scale(0.985);
+    }
+
+    .showcase-caption {
+      padding: 20px 26px;
+      background: linear-gradient(180deg, rgba(12, 10, 26, 0.95), rgba(7, 6, 16, 0.98));
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .caption-content { flex: 1; min-width: 260px; }
+    .caption-content h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold-lit);
+      margin-bottom: 5px;
+    }
+    .caption-content p {
+      font-size: 14px;
+      color: var(--ink-dim);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .showcase-nav-arrows {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .arrow-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(224, 182, 74, 0.35);
+      color: var(--gold-lit);
+      font-size: 20px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    .arrow-btn:hover {
+      background: var(--gold);
+      color: #05060e;
+      transform: scale(1.08);
+      box-shadow: 0 0 16px rgba(224,182,74,0.6);
+    }
+    .counter-badge {
+      font-size: 13px;
+      color: var(--ink-dim);
+      font-weight: 600;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .showcase-thumbs {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    @media (max-width: 820px) {
+      .showcase-thumbs { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .showcase-thumbs { grid-template-columns: repeat(3, 1fr); }
+    }
+    .thumb-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      background: #080714;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      opacity: 0.6;
+      aspect-ratio: 16 / 9;
+    }
+    .thumb-item:hover {
+      opacity: 0.9;
+      border-color: rgba(224, 182, 74, 0.6);
+      transform: translateY(-3px);
+    }
+    .thumb-item.active {
+      opacity: 1;
+      border-color: var(--gold);
+      box-shadow: 0 0 16px -2px rgba(224, 182, 74, 0.65);
+      transform: translateY(-4px);
+    }
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .thumb-item .thumb-label {
+      position: absolute;
+      bottom: 0; inset-inline: 0;
+      background: linear-gradient(180deg, transparent, rgba(5,6,14,0.92));
+      font-size: 10.5px;
+      color: #fff;
+      padding: 4px 6px;
+      text-align: center;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+</style>
 </head>
 <body>
 
@@ -779,6 +1040,7 @@
         </a>
 
         <div class="nav-links">
+          <a href="#screenshots">Screenshots</a>
           <a href="#features">Features</a>
           <a href="#comparison">Comparison</a>
           <a href="#download">Download</a>
@@ -946,7 +1208,123 @@
     <!-- ════════════════════════════════════════════════════════════════════
          FEATURES — liquid glass grid
          ════════════════════════════════════════════════════════════════════ -->
-    <section id="features" style="margin-top:70px;">
+    
+    <!-- ════════════════════════════════════════════════════════════════════
+         SCREENSHOTS SHOWCASE
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="screenshots" style="margin-top:76px;">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">Real Studio Showcase</span>
+          <h2>Inside AabSara</h2>
+          <p>Explore the lightweight, hardware-accelerated workstation built for modern creators, gamers, and streamers.</p>
+        </div>
+
+        <!-- Interactive Showcase Tabs -->
+        <div class="showcase-tabs" role="tablist">
+          <button class="tab-btn active" data-img="docs/screenshots/app-main.png" data-badge="Main Workspace" data-title="Unified Studio Dashboard" data-desc="Minimalist, low-latency recording interface with real-time viewport, instant status pills, quick action shortcuts, and zero clutter.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            Studio Dashboard
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/screen-recorder.png" data-badge="Hardware Acceleration" data-title="4K 120FPS GPU Capture" data-desc="Direct hardware encoding with NVIDIA NVENC, AMD AMF, and Intel QSV. Switch between full monitors, program windows, or custom snipped screen regions with zero frame drops.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+            4K GPU Recorder
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/audio-mixer.png" data-badge="Multi-Track Audio" data-title="Pro Audio Mixer Engine" data-desc="Separate system loopback (WASAPI) and studio microphone channels with real-time dBVU volume meters, discrete channel gain, and noise suppression.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5v14M7 9v6"/></svg>
+            Audio Mixer
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/chroma-overlay.png" data-badge="Studio WebCam" data-title="Chroma-Key & WebCam Studio" data-desc="Real-time green-screen background removal with adjustable similarity and smoothness thresholds, circular/square borders, and drag-and-drop PIP positioning.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            Chroma-Key PIP
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/video-editor.png" data-badge="Lossless NLE" data-title="Integrated Video Trimmer" data-desc="Non-destructive video editor directly inside the app. Set cut points on the interactive scrubber, preview frame-by-frame, and export lossless clips instantly.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+            Video Editor
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/screenshot-snipper.png" data-badge="Pixel Precision" data-title="Precision Screen Snipper" data-desc="Capture active displays, custom regions, or windows with instant lossless PNG preview, annotations, and one-click clipboard copying.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+            Screen Snipper
+          </button>
+          <button class="tab-btn" data-img="docs/screenshots/about-modal.png" data-badge="Open Source & Support" data-title="Open Source & Creator LTC Support" data-desc="100% free under the MIT License with zero watermarks or telemetry bloat. Integrated 1-click Litecoin donation wallet directly supporting indie development.">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            About & LTC
+          </button>
+        </div>
+
+        <!-- Featured Screenshot Frame (Window Mockup) -->
+        <div class="showcase-stage glass glass--live">
+          <div class="window-chrome">
+            <div class="win-dots">
+              <span class="dot dot-close"></span>
+              <span class="dot dot-min"></span>
+              <span class="dot dot-max"></span>
+            </div>
+            <div class="win-title" id="showcase-win-title">
+              <span class="win-badge" id="showcase-win-badge">Main Workspace</span>
+              <span id="showcase-active-tab-title">Unified Studio Dashboard</span>
+            </div>
+            <div class="win-actions">
+              <a id="showcase-full-btn" href="docs/screenshots/app-main.png" target="_blank" rel="noopener" class="win-full-link" title="Open full resolution in new tab">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                Full Resolution
+              </a>
+            </div>
+          </div>
+          
+          <div class="showcase-viewport">
+            <img id="showcase-img" src="docs/screenshots/app-main.png" alt="AabSara Studio Dashboard Screenshot" class="showcase-main-img" loading="eager" />
+          </div>
+
+          <div class="showcase-caption">
+            <div class="caption-content">
+              <h4 id="showcase-desc-title">Unified Studio Dashboard</h4>
+              <p id="showcase-desc-text">Minimalist, low-latency recording interface with real-time viewport, instant status pills, quick action shortcuts, and zero clutter.</p>
+            </div>
+            <div class="showcase-nav-arrows">
+              <button id="showcase-prev-btn" aria-label="Previous screenshot" class="arrow-btn">‹</button>
+              <span id="showcase-counter" class="counter-badge">1 / 7</span>
+              <button id="showcase-next-btn" aria-label="Next screenshot" class="arrow-btn">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thumbnails Reel -->
+        <div class="showcase-thumbs">
+          <div class="thumb-item active" data-index="0">
+            <img src="docs/screenshots/app-main.png" alt="Main Dashboard thumbnail" loading="lazy">
+            <span class="thumb-label">Dashboard</span>
+          </div>
+          <div class="thumb-item" data-index="1">
+            <img src="docs/screenshots/screen-recorder.png" alt="4K Recorder thumbnail" loading="lazy">
+            <span class="thumb-label">4K Recorder</span>
+          </div>
+          <div class="thumb-item" data-index="2">
+            <img src="docs/screenshots/audio-mixer.png" alt="Audio Mixer thumbnail" loading="lazy">
+            <span class="thumb-label">Audio Mixer</span>
+          </div>
+          <div class="thumb-item" data-index="3">
+            <img src="docs/screenshots/chroma-overlay.png" alt="Chroma-Key thumbnail" loading="lazy">
+            <span class="thumb-label">Chroma-Key</span>
+          </div>
+          <div class="thumb-item" data-index="4">
+            <img src="docs/screenshots/video-editor.png" alt="Video Editor thumbnail" loading="lazy">
+            <span class="thumb-label">Video Editor</span>
+          </div>
+          <div class="thumb-item" data-index="5">
+            <img src="docs/screenshots/screenshot-snipper.png" alt="Screen Snipper thumbnail" loading="lazy">
+            <span class="thumb-label">Snipper</span>
+          </div>
+          <div class="thumb-item" data-index="6">
+            <img src="docs/screenshots/about-modal.png" alt="About & LTC thumbnail" loading="lazy">
+            <span class="thumb-label">About &amp; LTC</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+<section id="features" style="margin-top:70px;">
       <div class="container">
         <div class="sec-head">
           <span class="eyebrow">The Arsenal</span>
@@ -1174,17 +1552,19 @@
 
         <div class="grid-dl">
 
+          <!-- Windows Installer -->
           <article class="dcard t-gold glass glass--live">
             <div class="dicon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
                 <path d="M3 5.5 10.5 4.6v7.1H3zM12.5 4.3 21 3.4v8.3h-8.5zM3 13.7h7.5v7.1L3 19.9zM12.5 13.7H21v8.3l-8.5-.9z"/>
               </svg>
             </div>
-            <h3>Windows Installer</h3>
+            <h3>Windows Setup</h3>
             <p class="meta">2.26 MB · Setup Wizard</p>
             <a class="btn btn-gold" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Installer.exe" target="_blank" rel="noopener">Download .exe</a>
           </article>
 
+          <!-- Windows Portable -->
           <article class="dcard t-azure glass glass--live">
             <div class="dicon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
@@ -1196,6 +1576,37 @@
             <a class="btn btn-glass" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Portable.exe" target="_blank" rel="noopener">Download .exe</a>
           </article>
 
+          <!-- macOS Apple Silicon -->
+          <article class="dcard t-ember glass glass--live">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.65 1.38-.56.65-.99 1.7-.88 2.73 1.02.08 2.04-.53 2.61-1.24Z"/>
+              </svg>
+            </div>
+            <h3>macOS (Apple Silicon)</h3>
+            <p class="meta">2.78 MB · DMG Installer</p>
+            <a class="btn btn-gold" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_aarch64.dmg" target="_blank" rel="noopener">Download .dmg</a>
+          </article>
+
+          <!-- Linux (DEB & AppImage) -->
+          <article class="dcard t-rose glass glass--live">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C9.5 2 8 3.8 8 6.5v4c0 1.5-.8 2.5-2 3-1 .5-2 1.8-2 3.5 0 2.5 2 4.5 5 4.5h6c3 0 5-2 5-4.5 0-1.7-1-3-2-3.5-1.2-.5-2-1.5-2-3v-4c0-2.7-1.5-4.5-4-4.5Z"/>
+                <circle cx="10" cy="6" r="1" fill="currentColor"/>
+                <circle cx="14" cy="6" r="1" fill="currentColor"/>
+                <path d="m11 8 1 1 1-1"/>
+              </svg>
+            </div>
+            <h3>Linux Packages</h3>
+            <p class="meta">3.4 MB DEB · 78 MB AppImage</p>
+            <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+              <a class="btn btn-gold" style="padding:10px 14px; font-size:12.5px;" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.deb" target="_blank" rel="noopener">Download .deb</a>
+              <a class="btn btn-glass" style="padding:10px 14px; font-size:12.5px;" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.AppImage" target="_blank" rel="noopener">Download .AppImage</a>
+            </div>
+          </article>
+
+          <!-- Android Mobile -->
           <article class="dcard t-cyan glass glass--live">
             <div class="dicon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1206,18 +1617,6 @@
             <h3>Android APK</h3>
             <p class="meta">12.2 MB · arm64-v8a</p>
             <a class="btn btn-gold" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_v1.0.0_arm64.apk" target="_blank" rel="noopener">Download .apk</a>
-          </article>
-
-          <article class="dcard t-rose glass glass--live soon">
-            <div class="dicon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8 18c-3 0-5-1.6-5-4 0-2 1.4-3.4 3.2-3.7C6 8.6 7 6.4 9.4 6.4c1.5 0 2.4.7 3 1.6.5-1.5 1.8-2.6 3.6-2.6 2 0 3.4 1.4 3.5 3.3 1.3.4 2.1 1.4 2.1 2.7 0 1.6-1.3 2.8-3 2.8"/>
-                <path d="M9 13h2l1.5 2.5L14 13h2"/>
-              </svg>
-            </div>
-            <h3>Linux &amp; macOS</h3>
-            <p class="meta">AppImage · Apple Silicon</p>
-            <span class="btn btn-line">Coming soon</span>
           </article>
 
         </div>
@@ -1306,6 +1705,7 @@
         </a>
 
         <div class="foot-links">
+          <a href="#screenshots">Screenshots</a>
           <a href="#features">Features</a>
           <a href="#comparison">Comparison</a>
           <a href="#download">Download</a>
@@ -1358,6 +1758,86 @@
       el.style.transition = 'opacity .7s cubic-bezier(.2,.7,.3,1) ' + (i % 4) * 70 + 'ms, transform .7s cubic-bezier(.2,.7,.3,1) ' + (i % 4) * 70 + 'ms';
       io.observe(el);
     });
+  
+    // ── Interactive Screenshots Showcase Controller ───────────────────────
+    (function() {
+      const tabs = document.querySelectorAll('.showcase-tabs .tab-btn');
+      const thumbs = document.querySelectorAll('.showcase-thumbs .thumb-item');
+      const mainImg = document.getElementById('showcase-img');
+      const winBadge = document.getElementById('showcase-win-badge');
+      const winTabTitle = document.getElementById('showcase-active-tab-title');
+      const descTitle = document.getElementById('showcase-desc-title');
+      const descText = document.getElementById('showcase-desc-text');
+      const counter = document.getElementById('showcase-counter');
+      const fullBtn = document.getElementById('showcase-full-btn');
+      const prevBtn = document.getElementById('showcase-prev-btn');
+      const nextBtn = document.getElementById('showcase-next-btn');
+
+      if (!tabs.length || !mainImg) return;
+
+      let currentIndex = 0;
+
+      function updateShowcase(index) {
+        if (index < 0) index = tabs.length - 1;
+        if (index >= tabs.length) index = 0;
+        currentIndex = index;
+
+        const targetTab = tabs[currentIndex];
+        const imgSrc = targetTab.getAttribute('data-img');
+        const badge = targetTab.getAttribute('data-badge');
+        const title = targetTab.getAttribute('data-title');
+        const desc = targetTab.getAttribute('data-desc');
+
+        // Smooth fade out
+        mainImg.classList.add('fade-out');
+
+        setTimeout(() => {
+          mainImg.src = imgSrc;
+          mainImg.alt = title + ' - AabSara';
+          if (fullBtn) fullBtn.href = imgSrc;
+          if (winBadge) winBadge.textContent = badge;
+          if (winTabTitle) winTabTitle.textContent = title;
+          if (descTitle) descTitle.textContent = title;
+          if (descText) descText.textContent = desc;
+          if (counter) counter.textContent = (currentIndex + 1) + ' / ' + tabs.length;
+
+          mainImg.classList.remove('fade-out');
+        }, 140);
+
+        // Update active states
+        tabs.forEach((t, i) => t.classList.toggle('active', i === currentIndex));
+        thumbs.forEach((th, i) => th.classList.toggle('active', i === currentIndex));
+      }
+
+      tabs.forEach((btn, idx) => {
+        btn.addEventListener('click', () => updateShowcase(idx));
+      });
+
+      thumbs.forEach((thumb, idx) => {
+        thumb.addEventListener('click', () => updateShowcase(idx));
+      });
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => updateShowcase(currentIndex - 1));
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => updateShowcase(currentIndex + 1));
+      }
+
+      // Keyboard arrow keys when viewport is visible
+      window.addEventListener('keydown', (e) => {
+        const rect = mainImg.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (!inView) return;
+
+        if (e.key === 'ArrowLeft') {
+          updateShowcase(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          updateShowcase(currentIndex + 1);
+        }
+      });
+    })();
+
   </script>
 
 </body>
