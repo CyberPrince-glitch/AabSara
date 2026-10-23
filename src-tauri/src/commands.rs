@@ -29,16 +29,30 @@ fn get_recordings_dir() -> String {
     #[cfg(target_os = "windows")]
     let dir = "D:\\AabSara\\Recordings".to_string();
 
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(target_os = "android")]
     let dir = match std::env::var("EXTERNAL_STORAGE") {
         Ok(storage) => format!("{}/Download/AabSara", storage),
         Err(_) => "/sdcard/Download/AabSara".to_string(),
+    };
+
+    #[cfg(all(not(target_os = "windows"), not(target_os = "android")))]
+    let dir = match std::env::var("HOME") {
+        Ok(home) => format!("{}/Movies/AabSara", home),
+        Err(_) => "./Recordings".to_string(),
     };
 
     if !Path::new(&dir).exists() {
         let _ = fs::create_dir_all(&dir);
     }
     dir
+}
+
+fn get_stream_log_path() -> String {
+    #[cfg(target_os = "windows")]
+    return "D:\\AabSara\\stream.log".to_string();
+
+    #[cfg(not(target_os = "windows"))]
+    return format!("{}/stream.log", get_recordings_dir());
 }
 
 /// আসল ভিডিও বাইটস সরাসরি ডিস্কে সেভ করা (কোনো Base64 কনভার্সন ছাড়া - 100% নিরাপদ ও অক্ষত)
@@ -401,13 +415,21 @@ pub fn cmd_list_recordings() -> Result<Vec<RecordingItem>, String> {
 /// রেকর্ডিংস ফোল্ডার উইন্ডোজ এক্সপ্লোরারে ওপেন করা
 #[tauri::command]
 pub fn cmd_open_recordings_folder() -> Result<(), String> {
+    let dir = get_recordings_dir();
     #[cfg(target_os = "windows")]
     {
-        let dir = get_recordings_dir();
         let mut cmd = Command::new("explorer");
         cmd.arg(&dir);
         cmd.creation_flags(CREATE_NO_WINDOW);
-        cmd.spawn().map_err(|e| format!("Failed to open folder: {e}"))?;
+        let _ = cmd.spawn();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let _ = Command::new("open").arg(&dir).spawn();
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("xdg-open").arg(&dir).spawn();
     }
     Ok(())
 }
@@ -420,7 +442,19 @@ pub fn cmd_play_media(file_path: String) -> Result<(), String> {
         let mut cmd = Command::new("explorer");
         cmd.arg(&file_path);
         cmd.creation_flags(CREATE_NO_WINDOW);
-        cmd.spawn().map_err(|e| format!("Failed to open file: {e}"))?;
+        let _ = cmd.spawn();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let _ = Command::new("open").arg(&file_path).spawn();
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("xdg-open").arg(&file_path).spawn();
+    }
+    #[cfg(target_os = "android")]
+    {
+        let _ = file_path;
     }
     Ok(())
 }
@@ -542,7 +576,8 @@ pub fn cmd_start_rtmp_stream(rtmp_url: String, stream_key: String, bitrate_kbps:
         .stdout(std::process::Stdio::null());
 
     // ডায়াগনস্টিক লগ যাতে স্ট্রিম সংযোগে কোনো সমস্যা হলে দেখা যায়
-    if let Ok(log_f) = fs::File::create("D:\\AabSara\\stream.log") {
+    let log_path = get_stream_log_path();
+    if let Ok(log_f) = fs::File::create(&log_path) {
         cmd.stderr(std::process::Stdio::from(log_f));
     } else {
         cmd.stderr(std::process::Stdio::null());
@@ -631,7 +666,8 @@ pub fn cmd_stop_rtmp_stream() -> Result<(), String> {
 
 #[tauri::command]
 pub fn cmd_get_stream_log() -> Result<String, String> {
-    if let Ok(content) = fs::read_to_string("D:\\AabSara\\stream.log") {
+    let log_path = get_stream_log_path();
+    if let Ok(content) = fs::read_to_string(&log_path) {
         let lines: Vec<&str> = content.lines().collect();
         let tail_count = if lines.len() > 25 { lines.len() - 25 } else { 0 };
         return Ok(lines[tail_count..].join("\n"));
@@ -702,7 +738,19 @@ pub fn cmd_open_url(url: String) -> Result<(), String> {
         let mut cmd = Command::new("explorer");
         cmd.arg(&url);
         cmd.creation_flags(CREATE_NO_WINDOW);
-        cmd.spawn().map_err(|e| format!("Failed to open URL: {e}"))?;
+        let _ = cmd.spawn();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let _ = Command::new("open").arg(&url).spawn();
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let _ = Command::new("xdg-open").arg(&url).spawn();
+    }
+    #[cfg(target_os = "android")]
+    {
+        let _ = url;
     }
     Ok(())
 }
