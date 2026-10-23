@@ -40,13 +40,14 @@ jobs:
             patchelf \
             libasound2-dev \
             libx11-dev \
-            libxtst-dev
+            libxtst-dev \
+            squashfs-tools
 
       - name: Install Node dependencies
         run: npm ci
 
       - name: Build Linux Bundles
-        run: npm run tauri build
+        run: npm run tauri build -- --bundles deb,appimage
 
       - name: Upload Linux Artifacts to Release
         env:
@@ -54,8 +55,13 @@ jobs:
         run: |
           TAG="${{ github.event.inputs.release_tag || github.ref_name }}"
           echo "Uploading Linux binaries to release $TAG..."
-          gh release upload "$TAG" src-tauri/target/release/bundle/deb/*.deb --clobber || true
-          gh release upload "$TAG" src-tauri/target/release/bundle/appimage/*.AppImage --clobber || true
+          ls -la src-tauri/target/release/bundle/ || true
+          for f in src-tauri/target/release/bundle/deb/*.deb; do
+            [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber
+          done
+          for f in src-tauri/target/release/bundle/appimage/*.AppImage; do
+            [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber
+          done
 
   build-macos:
     name: Build macOS (.dmg)
@@ -79,7 +85,7 @@ jobs:
         run: npm ci
 
       - name: Build macOS App & DMG
-        run: npm run tauri build
+        run: npm run tauri build -- --bundles dmg
 
       - name: Upload macOS Artifacts to Release
         env:
@@ -87,4 +93,7 @@ jobs:
         run: |
           TAG="${{ github.event.inputs.release_tag || github.ref_name }}"
           echo "Uploading macOS binaries to release $TAG..."
-          gh release upload "$TAG" src-tauri/target/release/bundle/dmg/*.dmg --clobber || true
+          ls -la src-tauri/target/release/bundle/ || true
+          for f in src-tauri/target/release/bundle/dmg/*.dmg; do
+            [ -f "$f" ] && gh release upload "$TAG" "$f" --clobber
+          done
