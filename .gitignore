@@ -1,0 +1,48 @@
+# Logs & Temp
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+stream.log
+
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Recordings & Local Media
+Recordings/
+*.mp4
+*.webm
+
+# Releases & Binaries (hosted on GitHub Releases)
+AabSara_Release/
+*.apk
+*.exe
+
+# Rust build artifacts
+src-tauri/target/
+**/target/
+
+# Android build artifacts
+src-tauri/gen/android/.gradle/
+src-tauri/gen/android/app/build/
+src-tauri/gen/android/buildSrc/build/
+src-tauri/gen/android/buildSrc/.gradle/
+**/local.properties
+.gradle/
