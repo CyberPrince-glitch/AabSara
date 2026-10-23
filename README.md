@@ -53,7 +53,9 @@ Grab the latest production binaries directly from our [GitHub Releases](https://
 | **Windows 10 / 11** | Installer (`.exe`) | **~2.26 MB** | Full setup wizard, start menu & desktop shortcuts | [**Download Installer**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Installer.exe) |
 | **Windows 10 / 11** | Portable (`.exe`) | **~6.41 MB** | Standalone binary. Zero installation, run anywhere | [**Download Portable**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Portable.exe) |
 | **Android 8.0+** | Package (`.apk`) | **~12.2 MB** | Optimized mobile app (`arm64-v8a`) with responsive UI | [**Download APK**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_v1.0.0_arm64.apk) |
-| **Linux & macOS** | AppImage / DMG | *In Progress* | Universal binary for Debian/Ubuntu/Arch & Apple Silicon | *Coming Soon* |
+| **Linux (Ubuntu/Debian)** | Package (.deb) | **~3.42 MB** | Native Debian/Ubuntu package (dpkg -i) | [**Download DEB**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.deb) |
+| **Linux (Universal)** | Portable (.AppImage) | **~78.2 MB** | Standalone portable executable for all Linux distributions | [**Download AppImage**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_amd64.AppImage) |
+| **macOS (Apple Silicon)** | Disk Image (.dmg) | **~2.78 MB** | Drag-and-drop installer for M1/M2/M3/M4 Apple Macs | [**Download DMG**](https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_1.0.0_aarch64.dmg) |
 
 ---
 
