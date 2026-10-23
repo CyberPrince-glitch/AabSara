@@ -30,9 +30,20 @@ fn get_recordings_dir() -> String {
     let dir = "D:\\AabSara\\Recordings".to_string();
 
     #[cfg(target_os = "android")]
-    let dir = match std::env::var("EXTERNAL_STORAGE") {
-        Ok(storage) => format!("{}/Download/AabSara", storage),
-        Err(_) => "/sdcard/Download/AabSara".to_string(),
+    let dir = {
+        let candidates = [
+            "/storage/emulated/0/Android/data/com.aabsara.recorder/files/Recordings",
+            "/data/data/com.aabsara.recorder/files/Recordings",
+            "/sdcard/Download/AabSara",
+        ];
+        let mut chosen = candidates[1].to_string();
+        for cand in &candidates {
+            if fs::create_dir_all(cand).is_ok() {
+                chosen = cand.to_string();
+                break;
+            }
+        }
+        chosen
     };
 
     #[cfg(all(not(target_os = "windows"), not(target_os = "android")))]
@@ -52,7 +63,7 @@ fn get_stream_log_path() -> String {
     return "D:\\AabSara\\stream.log".to_string();
 
     #[cfg(not(target_os = "windows"))]
-    return format!("{}/stream.log", get_recordings_dir());
+    return Path::new(&get_recordings_dir()).join("stream.log").to_string_lossy().to_string();
 }
 
 /// আসল ভিডিও বাইটস সরাসরি ডিস্কে সেভ করা (কোনো Base64 কনভার্সন ছাড়া - 100% নিরাপদ ও অক্ষত)
@@ -64,7 +75,7 @@ pub fn cmd_save_recording_bytes(filename: String, bytes: Vec<u8>) -> Result<Stri
     let clean_filename = filename
         .replace("..", ".")
         .replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], "_");
-    let file_path = format!("{dir}\\{clean_filename}");
+    let file_path = Path::new(&dir).join(&clean_filename).to_string_lossy().to_string();
 
     if bytes.is_empty() {
         return Err("Cannot save empty recording: buffer contains 0 bytes".to_string());
@@ -80,7 +91,7 @@ pub fn cmd_save_recording_bytes(filename: String, bytes: Vec<u8>) -> Result<Stri
     // সাইলেন্টলি ব্যাকগ্রাউন্ডে আল্ট্রাফাস্ট H.264 + AAC MP4 এ কনভার্ট করা (যাতে এডিটর এবং প্লেয়ার উভয়েই নিমেষে চলে)
     if clean_filename.ends_with(".webm") {
         let mp4_filename = clean_filename.replace(".webm", ".mp4");
-        let mp4_path = format!("{dir}\\{mp4_filename}");
+        let mp4_path = Path::new(&dir).join(&mp4_filename).to_string_lossy().to_string();
         let mut cmd = Command::new("ffmpeg");
         cmd.args([
             "-y",
@@ -116,7 +127,7 @@ pub fn cmd_save_recording_blob(filename: String, base64_data: String) -> Result<
     let clean_filename = filename
         .replace("..", ".")
         .replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], "_");
-    let file_path = format!("{dir}\\{clean_filename}");
+    let file_path = Path::new(&dir).join(&clean_filename).to_string_lossy().to_string();
 
     let raw_b64 = if let Some(idx) = base64_data.find(",") {
         &base64_data[idx + 1..]
@@ -141,7 +152,7 @@ pub fn cmd_save_recording_blob(filename: String, base64_data: String) -> Result<
     // সাইলেন্টলি ব্যাকগ্রাউন্ডে .mp4 এ রিমাক্স করা
     if clean_filename.ends_with(".webm") {
         let mp4_filename = clean_filename.replace(".webm", ".mp4");
-        let mp4_path = format!("{dir}\\{mp4_filename}");
+        let mp4_path = Path::new(&dir).join(&mp4_filename).to_string_lossy().to_string();
         let mut cmd = Command::new("ffmpeg");
         cmd.args(["-y", "-i", &file_path, "-c", "copy", &mp4_path]);
         #[cfg(target_os = "windows")]
@@ -165,7 +176,7 @@ pub fn cmd_save_screenshot(filename: String, base64_png: String) -> Result<Strin
     let clean_filename = filename
         .replace("..", ".")
         .replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], "_");
-    let file_path = format!("{dir}\\{clean_filename}");
+    let file_path = Path::new(&dir).join(&clean_filename).to_string_lossy().to_string();
 
     let raw_b64 = if let Some(idx) = base64_png.find(",") {
         &base64_png[idx + 1..]
@@ -208,7 +219,7 @@ pub fn cmd_export_edited_video(
     let clean_name = output_filename
         .replace("..", ".")
         .replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], "_");
-    let output_path = format!("{dir}\\{clean_name}");
+    let output_path = Path::new(&dir).join(&clean_name).to_string_lossy().to_string();
 
     let mut cmd = Command::new("ffmpeg");
     cmd.arg("-y");
@@ -295,9 +306,9 @@ pub fn cmd_ensure_playable_video(file_path: String) -> Result<String, String> {
     let ext = p.extension().unwrap_or_default().to_string_lossy().to_lowercase();
     let dir = get_recordings_dir();
     let stem = p.file_stem().unwrap_or_default().to_string_lossy().to_string();
-    let target_mp4 = format!("{dir}\\{stem}.mp4");
+    let target_mp4 = Path::new(&dir).join(format!("{stem}.mp4")).to_string_lossy().to_string();
 
-    if ext == "mp4" {
+    if ext == "mp4" || ext == "webm" {
         return Ok(file_path);
     }
 
@@ -321,11 +332,9 @@ pub fn cmd_ensure_playable_video(file_path: String) -> Result<String, String> {
     #[cfg(target_os = "windows")]
     cmd.creation_flags(CREATE_NO_WINDOW);
 
-    let status = cmd.status().map_err(|e| format!("FFmpeg transcode error: {e}"))?;
-    if status.success() && Path::new(&target_mp4).exists() {
-        Ok(target_mp4)
-    } else {
-        Err("Could not transcode video to playable MP4".into())
+    match cmd.status() {
+        Ok(status) if status.success() && Path::new(&target_mp4).exists() => Ok(target_mp4),
+        _ => Ok(file_path),
     }
 }
 
@@ -520,6 +529,11 @@ static STREAM_TX: Mutex<Option<Sender<Vec<u8>>>> = Mutex::new(None);
 
 #[tauri::command]
 pub fn cmd_start_rtmp_stream(rtmp_url: String, stream_key: String, bitrate_kbps: u32) -> Result<String, String> {
+    #[cfg(target_os = "android")]
+    {
+        return Err("Live RTMP streaming is supported on desktop platforms.".into());
+    }
+
     let mut lock = STREAM_CHILD.lock().unwrap();
     if lock.is_some() {
         return Err("A live stream is already active".into());

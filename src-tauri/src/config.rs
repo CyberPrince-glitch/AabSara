@@ -108,6 +108,10 @@ fn dirs_next_video_dir() -> Option<String> {
             .ok()
             .map(|home| format!("{home}\\Videos\\AabSara"))
     }
+    #[cfg(target_os = "android")]
+    {
+        Some("/storage/emulated/0/Android/data/com.aabsara.recorder/files/Recordings".into())
+    }
     #[cfg(target_os = "linux")]
     {
         std::env::var("HOME")
@@ -120,7 +124,7 @@ fn dirs_next_video_dir() -> Option<String> {
             .ok()
             .map(|home| format!("{home}/Movies/AabSara"))
     }
-    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "android")))]
     {
         None
     }
@@ -159,7 +163,11 @@ impl AppConfig {
             let appdata = std::env::var("APPDATA").unwrap_or_else(|_| ".".into());
             format!("{appdata}\\AabSara\\config.json")
         }
-        #[cfg(not(target_os = "windows"))]
+        #[cfg(target_os = "android")]
+        {
+            "/data/data/com.aabsara.recorder/files/config.json".into()
+        }
+        #[cfg(all(not(target_os = "windows"), not(target_os = "android")))]
         {
             let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
             format!("{home}/.config/aabsara/config.json")

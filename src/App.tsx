@@ -343,10 +343,11 @@ export default function App() {
       // If no active preview, grab quick screen frame
       if (!snapshot) {
         try {
-          const tempStream = await navigator.mediaDevices.getDisplayMedia({
-            video: { displaySurface: "monitor" },
-            audio: false,
-          });
+          if (navigator.mediaDevices && typeof (navigator.mediaDevices as any).getDisplayMedia === "function") {
+            const tempStream: MediaStream = await (navigator.mediaDevices as any).getDisplayMedia({
+              video: { displaySurface: "monitor" },
+              audio: false,
+            });
           const tempVid = document.createElement("video");
           tempVid.srcObject = tempStream;
           await tempVid.play();
@@ -358,7 +359,8 @@ export default function App() {
             cctx.drawImage(tempVid, 0, 0);
             snapshot = c.toDataURL("image/jpeg", 0.9);
           }
-          tempStream.getTracks().forEach((t) => t.stop());
+            tempStream.getTracks().forEach((t) => t.stop());
+          }
         } catch (snapErr) {
           console.warn("Could not capture desktop snapshot for snip overlay:", snapErr);
         }
@@ -398,10 +400,18 @@ export default function App() {
       setIsLivePreview(false);
     } else {
       try {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: false,
-        });
+        let stream: MediaStream;
+        if (navigator.mediaDevices && typeof (navigator.mediaDevices as any).getDisplayMedia === "function") {
+          stream = await (navigator.mediaDevices as any).getDisplayMedia({
+            video: true,
+            audio: false,
+          });
+        } else {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" },
+            audio: false,
+          });
+        }
         livePreviewStreamRef.current = stream;
         if (screenPreviewVideoRef.current) {
           screenPreviewVideoRef.current.srcObject = stream;
@@ -528,14 +538,28 @@ export default function App() {
       const screenW = window.screen.width || 1366;
       const screenH = window.screen.height || 768;
 
-      // 1. Capture Desktop Screen
-      const displayStream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          frameRate: parseInt(videoFps) || 60,
-          displaySurface: recordMode === "area" || recordMode === "screen" ? "monitor" : "window",
-        },
-        audio: true,
-      });
+      // 1. Capture Desktop Screen (or Mobile Camera on Android)
+      let displayStream: MediaStream;
+      if (navigator.mediaDevices && typeof (navigator.mediaDevices as any).getDisplayMedia === "function") {
+        displayStream = await (navigator.mediaDevices as any).getDisplayMedia({
+          video: {
+            frameRate: parseInt(videoFps) || 60,
+            displaySurface: recordMode === "area" || recordMode === "screen" ? "monitor" : "window",
+          },
+          audio: true,
+        });
+      } else {
+        // Fallback for Android / Mobile: activate camera and audio
+        displayStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: parseInt(videoFps) || 30 },
+          },
+          audio: true,
+        });
+      }
 
       streamRef.current = displayStream;
 
@@ -584,7 +608,7 @@ export default function App() {
 
       // Connect Microphone Audio
       let micStream: MediaStream | null = null;
-      if (micEnabled) {
+      if (micEnabled && displayStream.getAudioTracks().length === 0) {
         try {
           micStream = await navigator.mediaDevices.getUserMedia({
             audio: { echoCancellation: true, noiseSuppression: true },
@@ -910,10 +934,18 @@ export default function App() {
         ctx = captureCanvas.getContext("2d");
         ctx?.drawImage(vid, 0, 0, captureCanvas.width, captureCanvas.height);
       } else {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: false,
-        });
+        let stream: MediaStream;
+        if (navigator.mediaDevices && typeof (navigator.mediaDevices as any).getDisplayMedia === "function") {
+          stream = await (navigator.mediaDevices as any).getDisplayMedia({
+            video: true,
+            audio: false,
+          });
+        } else {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" },
+            audio: false,
+          });
+        }
 
         const video = document.createElement("video");
         video.srcObject = stream;
@@ -1003,7 +1035,8 @@ export default function App() {
       // 2. Direct memory blob URL for zero-CORS instant seeking
       try {
         const bytes = await invoke<number[]>("cmd_read_video_bytes", { filePath: playablePath });
-        const blob = new Blob([new Uint8Array(bytes)], { type: "video/mp4" });
+        const mimeType = playablePath.toLowerCase().endsWith(".webm") ? "video/webm" : "video/mp4";
+        const blob = new Blob([new Uint8Array(bytes)], { type: mimeType });
         const blobUrl = URL.createObjectURL(blob);
         setEditorVideoSrc(blobUrl);
       } catch {
