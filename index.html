@@ -1,27 +1,1364 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/tauri.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AabSara PRO — High-Performance Screen Recorder & Streamer</title>
-    <!-- Liquid Glass & Mythic Gold Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: #06070d;
-        color: #f0f2fa;
-        overflow: hidden;
-        user-select: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AabSara — Free Screen &amp; Game Recorder | Every Premium Feature For $0</title>
+  <meta name="description" content="AabSara: free, open-source screen and game recorder. 4K@120FPS, GPU encoding, green screen, live streaming — every premium feature of Action!, Bandicam and Camtasia, for zero dollars." />
+  <link rel="icon" type="image/png" href="aabsara_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ════════════════════════════════════════════════════════════════════════
+       AabSara — "Liquid Glass × Gold Filigree × Cosmic Nebula"
+       Primary accent: Mythic Gold. Glass tints are atmospheric, not brand.
+       ════════════════════════════════════════════════════════════════════════ */
+
+    :root {
+      --gold:        #e0b64a;
+      --gold-lit:    #ffe9a8;
+      --gold-pale:   #fff6d8;
+      --gold-deep:   #8a5f12;
+      --gold-line:   rgba(224, 182, 74, 0.38);
+
+      --void:        #05060e;
+      --void-2:      #0a0718;
+
+      --ink:         #f3f0ff;
+      --ink-dim:     #a9a2c8;
+      --ink-faint:   #6f6894;
+
+      --violet:      #8b5cf6;
+      --azure:       #3b82f6;
+      --cyan:        #22d3ee;
+      --ember:       #f59e0b;
+      --rose:        #ec4899;
+
+      --glass-bg:    linear-gradient(155deg, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0.065) 44%, rgba(255,255,255,0.025) 100%);
+      --glass-line:  rgba(255,255,255,0.17);
+
+      --r-lg: 30px;
+      --r-md: 22px;
+      --r-sm: 14px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--void);
+      overflow-x: hidden;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* ── Cosmic ground: layered nebula washes ───────────────────────────── */
+    .cosmos {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1100px 680px at 8% -6%,   rgba(139, 92, 246, 0.42), transparent 62%),
+        radial-gradient(1000px 620px at 94% 4%,   rgba(59, 128, 246, 0.38), transparent 62%),
+        radial-gradient(900px 700px at 50% 112%, rgba(245, 158, 11, 0.22), transparent 60%),
+        radial-gradient(760px 560px at 82% 64%,  rgba(34, 211, 238, 0.20), transparent 60%),
+        radial-gradient(680px 520px at 20% 74%,  rgba(236, 72, 153, 0.18), transparent 60%),
+        linear-gradient(180deg, #06070f 0%, #0b0819 52%, #06070f 100%);
+    }
+
+    /* Slow-drifting nebula blobs */
+    .cosmos::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      background:
+        radial-gradient(closest-side, rgba(139,92,246,0.38), transparent 70%) 18% 22% / 46% 40% no-repeat,
+        radial-gradient(closest-side, rgba(59,130,246,0.34), transparent 70%) 84% 16% / 42% 38% no-repeat,
+        radial-gradient(closest-side, rgba(236,72,153,0.24), transparent 70%) 72% 78% / 44% 40% no-repeat,
+        radial-gradient(closest-side, rgba(245,158,11,0.20), transparent 70%) 26% 82% / 40% 36% no-repeat,
+        radial-gradient(closest-side, rgba(34,211,238,0.18), transparent 70%) 56% 44% / 38% 34% no-repeat;
+      filter: blur(70px);
+      animation: drift 46s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate3d(0,0,0) scale(1); }
+      50%  { transform: translate3d(2.2%, -2.6%, 0) scale(1.09); }
+      100% { transform: translate3d(-2.4%, 2.2%, 0) scale(1.04); }
+    }
+
+    /* Starfield — two densities, slow twinkle */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        radial-gradient(1.4px 1.4px at 24px 38px,  rgba(255,255,255,0.75), transparent 1.5px),
+        radial-gradient(1px 1px   at 88px 72px,  var(--gold-pale),      transparent 1.5px),
+        radial-gradient(1.2px 1.2px at 158px 128px, rgba(255,255,255,0.45), transparent 1.5px),
+        radial-gradient(1.8px 1.8px at 236px 66px, rgba(255,255,255,0.6), transparent 2px),
+        radial-gradient(1px 1px   at 310px 190px, rgba(199,180,255,0.55), transparent 1.5px);
+      background-size: 340px 340px;
+      opacity: 0.55;
+      animation: twinkle 7s ease-in-out infinite alternate;
+    }
+
+    .stars::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 60px 150px, rgba(255,255,255,0.5), transparent 1.5px),
+        radial-gradient(1.4px 1.4px at 190px 20px, rgba(255,255,255,0.4), transparent 1.6px);
+      background-size: 220px 220px;
+      opacity: 0.4;
+      animation: twinkle 11s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes twinkle { from { opacity: 0.32; } to { opacity: 0.7; } }
+
+    /* Grain + vignette to stop the gradients reading as flat plastic */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.16;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 3; }
+    .hero > .container { width: 100%; }
+
+    /* ── Typography ─────────────────────────────────────────────────────── */
+    h1, h2, h3 { font-family: 'Cinzel', Georgia, serif; font-weight: 800; line-height: 1.1; }
+
+    .display {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      background: linear-gradient(178deg, #fff8e2 0%, var(--gold-lit) 34%, var(--gold) 62%, var(--gold-deep) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 3px 14px rgba(224, 182, 74, 0.30));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--gold-lit);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 26px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    /* ── Liquid glass primitive ─────────────────────────────────────────── */
+    .glass {
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(26px) saturate(165%);
+      -webkit-backdrop-filter: blur(26px) saturate(165%);
+      border: 1px solid var(--glass-line);
+      border-radius: var(--r-lg);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.34),
+        inset 0 -1px 0 rgba(255,255,255,0.06),
+        0 26px 60px -24px rgba(0,0,0,0.72);
+    }
+
+    /* Specular rim — the "glass edge" highlight */
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(158deg, rgba(255,255,255,0.55), rgba(255,255,255,0) 38%, rgba(255,255,255,0.16) 100%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Cursor-following light bloom */
+    .glass--live::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.13), transparent 62%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .glass--live:hover::after { opacity: 1; }
+
+    /* ── Gold filigree ornament kit ─────────────────────────────────────── */
+    .filigree {
+      position: absolute;
+      width: 148px;
+      height: 148px;
+      pointer-events: none;
+      opacity: 1;
+      z-index: 6;
+      overflow: visible;
+      filter:
+        drop-shadow(0 0 6px rgba(255, 233, 168, 0.85))
+        drop-shadow(0 0 16px rgba(224, 182, 74, 0.55));
+    }
+    .filigree.tl { top: 6px;     left: 6px; }
+    .filigree.tr { top: 6px;     right: 6px;   transform: scaleX(-1); }
+    .filigree.bl { bottom: 6px;  left: 6px;    transform: scaleY(-1); }
+    .filigree.br { bottom: 6px;  right: 6px;   transform: scale(-1); }
+
+    /* Gold crest medallion above the title */
+    .crest-medallion {
+      width: 74px; height: 74px;
+      margin: 0 auto 6px;
+      display: grid; place-items: center;
+      position: relative;
+      filter: drop-shadow(0 0 12px rgba(224, 182, 74, 0.7));
+    }
+    .crest-medallion::before {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 28%, rgba(255, 247, 219, 0.32), rgba(224, 182, 74, 0.08) 60%, transparent 72%);
+      border: 1px solid rgba(224, 182, 74, 0.55);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 24px -6px rgba(224, 182, 74, 0.7);
+    }
+    .crest-medallion svg { width: 44px; height: 44px; position: relative; z-index: 2; }
+
+    .vine-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 66px auto 0;
+      max-width: 900px;
+      opacity: 1;
+      filter: drop-shadow(0 0 8px rgba(224, 182, 74, 0.55));
+    }
+    .vine-divider svg { width: min(100%, 520px); height: 42px; }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+      background: linear-gradient(180deg, rgba(5,6,14,0.88), rgba(5,6,14,0.52) 70%, transparent);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(224,182,74,0.14);
+    }
+
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+
+    .crest {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(150deg, rgba(255,246,216,0.22), rgba(224,182,74,0.10));
+      border: 1px solid var(--gold-line);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 22px -10px rgba(224,182,74,0.55);
+    }
+    .crest svg { width: 24px; height: 24px; }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1; }
+    .brand-name {
+      font-family: 'Cinzel', serif; font-weight: 800; font-size: 20px;
+      background: linear-gradient(180deg, #fff6d8, var(--gold));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .brand-sub { font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
+
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a {
+      color: var(--ink-dim); text-decoration: none; font-size: 14.5px; font-weight: 500;
+      transition: color 0.22s ease; position: relative;
+    }
+    .nav-links a:hover { color: var(--gold-lit); }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 50%; bottom: -7px;
+      width: 0; height: 1.5px; background: var(--gold);
+      transition: width 0.3s ease, left 0.3s ease; transform: translateX(-50%);
+    }
+    .nav-links a:hover::after { width: 100%; left: 0; transform: none; }
+
+    /* ── Buttons ────────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14.5px;
+      text-decoration: none; cursor: pointer; border: none;
+      padding: 13px 26px; border-radius: 13px;
+      letter-spacing: 0.01em;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+      white-space: nowrap;
+    }
+    .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+    .btn-gold {
+      color: #24180a;
+      background: linear-gradient(150deg, #fff3d0 0%, var(--gold) 46%, #b8820f 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 12px 30px -12px rgba(224,182,74,0.75);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 18px 40px -14px rgba(224,182,74,0.9); }
+
+    .btn-glass {
+      color: var(--ink);
+      background: linear-gradient(155deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 12px 30px -16px rgba(0,0,0,0.8);
+    }
+    .btn-glass:hover { transform: translateY(-2px); border-color: var(--gold-line); color: var(--gold-lit); }
+
+    .btn-line {
+      color: var(--gold-lit);
+      background: transparent;
+      border: 1.5px solid var(--gold-line);
+    }
+    .btn-line:hover { background: rgba(224,182,74,0.10); border-color: var(--gold); transform: translateY(-2px); }
+
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 72px 0 40px;
+    }
+
+    .hero-panel {
+      width: 100%;
+      max-width: 1000px;
+      padding: 74px 56px 66px;
+      border-radius: 38px;
+      overflow: hidden;
+      border-color: rgba(224, 182, 74, 0.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.40),
+        inset 0 0 0 1px rgba(224, 182, 74, 0.16),
+        inset 0 0 90px rgba(224, 182, 74, 0.08),
+        0 0 0 1px rgba(224, 182, 74, 0.22),
+        0 0 70px -14px rgba(224, 182, 74, 0.55),
+        0 40px 90px -30px rgba(0, 0, 0, 0.88);
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+      background:
+        radial-gradient(520px 300px at 50% -10%, rgba(224,182,74,0.20), transparent 70%),
+        radial-gradient(420px 280px at 12% 108%, rgba(139,92,246,0.24), transparent 70%),
+        radial-gradient(420px 280px at 88% 108%, rgba(59,130,246,0.24), transparent 70%);
+    }
+
+    .hero > * { position: relative; z-index: 4; }
+
+    .hero h1 {
+      font-size: clamp(3.2rem, 9vw, 6.4rem);
+      margin: 18px 0 6px;
+      letter-spacing: 0.005em;
+    }
+
+    .hero-tag {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.95rem, 2.4vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 26px;
+    }
+
+    .hero-sub {
+      max-width: 660px;
+      margin: 0 auto;
+      font-size: clamp(1rem, 1.6vw, 1.13rem);
+      color: var(--ink-dim);
+      line-height: 1.72;
+    }
+    .hero-sub strong { color: var(--gold-lit); font-weight: 600; }
+
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 38px; }
+
+    .hero-proof {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      margin-top: 42px; padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .proof-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 15px; border-radius: 999px;
+      font-size: 12.5px; font-weight: 500; color: var(--ink-dim);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .proof-chip svg { width: 14px; height: 14px; color: var(--gold); }
+
+    /* ── Section heading ────────────────────────────────────────────────── */
+    .sec-head { text-align: center; margin-bottom: 52px; }
+    .sec-head h2 {
+      font-size: clamp(2rem, 4.4vw, 3.1rem);
+      margin: 16px 0 14px;
+      color: var(--ink);
+    }
+    .sec-head h2 em {
+      font-style: normal;
+      background: linear-gradient(180deg, var(--gold-pale), var(--gold));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .sec-head p { max-width: 620px; margin: 0 auto; color: var(--ink-dim); font-size: 1.02rem; }
+
+    /* ── Feature cards (liquid glass grid) ──────────────────────────────── */
+    .grid-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .fcard {
+      position: relative;
+      padding: 30px 28px 152px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(.2,.7,.3,1), box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      border-color: rgba(var(--accent, 167, 139, 246), 0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.40),
+        inset 0 0 48px rgba(var(--accent, 167, 139, 246), 0.18),
+        0 26px 60px -24px rgba(0, 0, 0, 0.75),
+        0 0 54px -16px rgba(var(--accent, 167, 139, 246), 0.75);
+    }
+    .fcard:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.48),
+        inset 0 0 60px rgba(var(--accent, 167, 139, 246), 0.26),
+        0 40px 70px -28px rgba(0, 0, 0, 0.85),
+        0 0 70px -14px rgba(var(--accent, 167, 139, 246), 0.95);
+    }
+
+    /* Per-card hue wash */
+    .fcard::after {
+      content: "";
+      position: absolute; inset: 0; border-radius: inherit; z-index: 1; pointer-events: none;
+      opacity: 0.9;
+      transition: opacity 0.35s ease;
+      background: radial-gradient(430px 310px at var(--hx, 82%) var(--hy, 18%), var(--tint, rgba(139,92,246,0.38)), transparent 70%);
+    }
+    .fcard:hover::after { opacity: 1; }
+
+    .fcard > * { position: relative; z-index: 3; }
+
+    .fcard.t-violet { --tint: rgba(139,92,246,0.46); --hx: 88%; --hy: 16%; --accent: 167,139,246; }
+    .fcard.t-azure  { --tint: rgba(59,130,246,0.44); --hx: 80%; --hy: 24%; --accent: 96,165,250; }
+    .fcard.t-cyan   { --tint: rgba(34,211,238,0.42); --hx: 78%; --hy: 70%; --accent: 103,232,249; }
+    .fcard.t-rose   { --tint: rgba(236,72,153,0.42); --hx: 86%; --hy: 20%; --accent: 244,114,182; }
+    .fcard.t-ember  { --tint: rgba(245,158,11,0.44); --hx: 82%; --hy: 28%; --accent: 251,191,36; }
+    .fcard.t-gold   { --tint: rgba(224,182,74,0.40); --hx: 84%; --hy: 22%; --accent: 240,206,116; }
+
+    .fnum {
+      width: 54px; height: 54px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      font-family: 'Cinzel', serif; font-weight: 700; font-size: 17px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 32% 26%, rgba(255,255,255,0.55), transparent 55%),
+        linear-gradient(150deg, rgba(var(--accent,167,139,246),0.95), rgba(var(--accent,167,139,246),0.35));
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 10px 26px -8px rgba(var(--accent,167,139,246),0.85), inset 0 1px 0 rgba(255,255,255,0.6);
+      margin-bottom: 22px;
+    }
+
+    .fcard h3 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.32rem; color: #fff; margin-bottom: 8px; letter-spacing: 0; }
+    .fcard p { color: var(--ink-dim); font-size: 0.95rem; line-height: 1.6; max-width: 46ch; }
+
+    /* Illustration owns the lower band so it can never collide with copy */
+    .fcard .illus { position: absolute; right: 20px; bottom: 16px; width: 120px; height: 120px; z-index: 2; opacity: 0.96; }
+
+    /* ── Comparison — gold-framed ledger ───────────────────────────────── */
+    .ledger {
+      padding: 12px;
+      border-radius: 36px;
+      position: relative;
+      border-color: rgba(224, 182, 74, 0.42);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.32),
+        inset 0 0 0 1px rgba(224,182,74,0.14),
+        0 0 80px -20px rgba(224,182,74,0.55),
+        0 40px 90px -34px rgba(0,0,0,0.9);
+    }
+
+    .ledger-inner {
+      border-radius: 26px;
+      border: 1px solid rgba(224, 182, 74, 0.50);
+      background: linear-gradient(180deg, rgba(14, 10, 30, 0.70), rgba(7, 8, 18, 0.50));
+      box-shadow: inset 0 0 70px rgba(224, 182, 74, 0.07);
+      padding: 34px 30px 30px;
+      overflow-x: auto;
+    }
+
+    .cmp { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 720px; }
+    .cmp th, .cmp td { padding: 15px 14px; text-align: center; font-size: 14.5px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .cmp thead th { border-bottom: 1px solid var(--gold-line); padding-bottom: 18px; }
+    .cmp tbody tr:last-child td { border-bottom: none; }
+
+    .cmp th.feat, .cmp td.feat {
+      text-align: left; font-weight: 500; color: var(--ink); width: 30%;
+      padding-left: 4px;
+    }
+    .cmp thead th.feat { color: var(--ink-faint); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; }
+
+    .cmp thead th.ours {
+      color: #fff4d4;
+      font-family: 'Cinzel', serif; font-weight: 800; font-size: 16px; letter-spacing: 0.06em;
+      position: relative;
+      background: linear-gradient(180deg, rgba(224,182,74,0.26), rgba(224,182,74,0.08));
+      border-left: 1px solid rgba(224,182,74,0.55);
+      border-right: 1px solid rgba(224,182,74,0.55);
+      text-shadow: 0 0 18px rgba(224,182,74,0.85);
+    }
+    .cmp thead th.ours::after {
+      content: ""; position: absolute; left: 12%; right: 12%; bottom: -1px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      box-shadow: 0 0 16px rgba(224,182,74,1);
+    }
+    .cmp thead th.paid { color: var(--ink-faint); font-weight: 600; font-size: 13.5px; letter-spacing: 0.02em; }
+    .cmp thead th.paid .price { display: block; font-size: 11.5px; color: var(--ink-faint); opacity: 0.7; margin-top: 3px; }
+
+    .cmp td.ours {
+      background: linear-gradient(180deg, rgba(224,182,74,0.24), rgba(224,182,74,0.10));
+      border-left: 1px solid rgba(224,182,74,0.45);
+      border-right: 1px solid rgba(224,182,74,0.45);
+      color: #ffeab0;
+      font-weight: 600;
+      text-shadow: 0 0 16px rgba(224,182,74,0.6);
+    }
+    .cmp td.paid { color: var(--ink-faint); }
+    .cmp td.paid .no { color: rgba(236,72,153,0.85); font-weight: 700; }
+    .cmp td.paid .yes { color: rgba(255,255,255,0.55); }
+
+    .cmp tbody tr:hover td { background-color: rgba(255,255,255,0.022); }
+    .cmp tbody tr:hover td.ours { background: linear-gradient(180deg, rgba(224,182,74,0.34), rgba(224,182,74,0.15)); }
+
+    .cmp-scroll-hint {
+      display: none;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+    .cmp-scroll-hint::after { content: "  ⟷"; color: var(--gold); }
+
+    .verdict {
+      margin-top: 26px; padding: 22px 26px;
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 18px; flex-wrap: wrap;
+      background: linear-gradient(120deg, rgba(224,182,74,0.14), rgba(139,92,246,0.10), rgba(59,130,246,0.10));
+      border: 1px solid var(--gold-line);
+    }
+    .verdict strong { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--gold-lit); font-weight: 800; }
+    .verdict span { color: var(--ink-dim); font-size: 14px; }
+
+    /* ── Download cards (tall, gold-framed) ────────────────────────────── */
+    .grid-dl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+    .dcard {
+      position: relative;
+      padding: 34px 24px 28px;
+      border-radius: var(--r-lg);
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(.2,.7,.3,1);
+      display: flex; flex-direction: column; align-items: center;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.38),
+        inset 0 0 44px rgba(255,255,255,0.05),
+        0 26px 60px -24px rgba(0,0,0,0.75),
+        0 0 48px -18px var(--glow, rgba(224,182,74,0.6));
+    }
+    .dcard:hover { transform: translateY(-6px); }
+    .dcard::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 1; pointer-events: none;
+      background: radial-gradient(360px 270px at 50% 106%, var(--tint, rgba(224,182,74,0.36)), transparent 72%);
+    }
+    .dcard > * { position: relative; z-index: 3; }
+
+    .dcard.t-gold  { --tint: rgba(224,182,74,0.40); --glow: rgba(224,182,74,0.7); }
+    .dcard.t-azure { --tint: rgba(59,130,246,0.38); --glow: rgba(59,130,246,0.7); }
+    .dcard.t-cyan  { --tint: rgba(34,211,238,0.36); --glow: rgba(34,211,238,0.65); }
+    .dcard.t-rose  { --tint: rgba(236,72,153,0.36); --glow: rgba(236,72,153,0.65); }
+
+    .dicon {
+      width: 62px; height: 62px; display: grid; place-items: center;
+      border-radius: 19px; margin-bottom: 18px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.17), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.20);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.42), 0 12px 28px -14px rgba(0,0,0,0.9);
+    }
+    .dicon svg { width: 28px; height: 28px; color: var(--gold-lit); }
+
+    .dcard h3 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.12rem; color: #fff; margin-bottom: 6px; letter-spacing: 0; }
+    .dcard .meta { font-size: 12.5px; color: var(--ink-faint); margin-bottom: 18px; }
+    .dcard .btn { width: 100%; font-size: 13.5px; padding: 12px 16px; }
+    .dcard.soon .btn { opacity: 0.55; pointer-events: none; }
+
+    .dl-note { text-align: center; margin-top: 34px; color: var(--ink-faint); font-size: 14px; letter-spacing: 0.02em; }
+    .dl-note b { color: var(--gold-lit); font-weight: 600; }
+
+    /* ── FAQ ────────────────────────────────────────────────────────────── */
+    .faq-wrap { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+
+    .faq-item {
+      border-radius: var(--r-md);
+      overflow: hidden;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .faq-item:hover { border-color: var(--gold-line); }
+    .faq-item.open { background: linear-gradient(155deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04)); border-color: var(--gold-line); }
+
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-weight: 600; font-size: 1rem; color: var(--ink);
+      user-select: none;
+    }
+    .faq-q .chev {
+      flex-shrink: 0; width: 24px; height: 24px; display: grid; place-items: center;
+      border-radius: 50%; color: var(--gold-lit); font-size: 15px;
+      background: rgba(224,182,74,0.12); border: 1px solid var(--gold-line);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .faq-item.open .chev { transform: rotate(45deg); background: rgba(224,182,74,0.26); }
+
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(.3,.8,.3,1);
+      color: var(--ink-dim); font-size: 0.95rem; line-height: 1.7;
+    }
+    .faq-a-inner { padding: 0 24px 22px; }
+    .faq-item.open .faq-a { max-height: 260px; }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    footer { margin-top: 100px; padding: 54px 0 40px; border-top: 1px solid rgba(224,182,74,0.16); }
+    .foot-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 34px; flex-wrap: wrap; margin-bottom: 38px; }
+    .foot-links { display: flex; gap: 26px; flex-wrap: wrap; }
+    .foot-links a { color: var(--ink-dim); text-decoration: none; font-size: 14px; transition: color 0.2s ease; }
+    .foot-links a:hover { color: var(--gold-lit); }
+    .foot-bottom { text-align: center; color: var(--ink-faint); font-size: 12.5px; line-height: 1.9; }
+    .foot-bottom a { color: var(--gold); text-decoration: none; }
+
+    section { scroll-margin-top: 96px; }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 1080px) {
+      .grid-features { grid-template-columns: repeat(2, 1fr); }
+      .grid-dl { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 820px) {
+      .nav-links { display: none; }
+      .hero-panel { padding: 54px 24px 46px; border-radius: 28px; }
+      .filigree { width: 96px; height: 96px; }
+      .grid-features { grid-template-columns: 1fr; }
+      .fcard { padding: 26px 22px 146px; }
+      .fcard .illus { width: 122px; height: 122px; right: 18px; bottom: 14px; }
+      .grid-dl { grid-template-columns: 1fr; }
+      .cmp-scroll-hint { display: block; }
+    }
+    @media (max-width: 520px) {
+      .container { padding: 0 18px; }
+      .hero { padding-top: 46px; }
+      .hero-panel { padding: 42px 18px 36px; }
+      .filigree { width: 74px; height: 74px; }
+      .fcard { padding: 24px 20px 140px; }
+      .ledger-inner { padding: 22px 16px; }
+      .verdict { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cosmos"></div>
+  <div class="stars"></div>
+  <div class="grain"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SVG DEFS — gold gradient + filigree ornament kit
+       ══════════════════════════════════════════════════════════════════════ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"   stop-color="#fff6d8"/>
+        <stop offset="28%"  stop-color="#f0d07a"/>
+        <stop offset="58%"  stop-color="#c9992e"/>
+        <stop offset="82%"  stop-color="#f4e2a0"/>
+        <stop offset="100%" stop-color="#9a6c16"/>
+      </linearGradient>
+
+      <linearGradient id="goldSoft" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"   stop-color="#ffe9a8" stop-opacity="0.95"/>
+        <stop offset="50%"  stop-color="#c9992e" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#fff6d8" stop-opacity="0.9"/>
+      </linearGradient>
+
+      <radialGradient id="orb" cx="34%" cy="28%">
+        <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.95"/>
+        <stop offset="32%"  stop-color="#e9d3ff" stop-opacity="0.72"/>
+        <stop offset="72%"  stop-color="#7c3aed" stop-opacity="0.42"/>
+        <stop offset="100%" stop-color="#3b1a8a" stop-opacity="0.08"/>
+      </radialGradient>
+
+      <linearGradient id="skyPane" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#38bdf8"/>
+        <stop offset="45%"  stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#1e1b4b"/>
+      </linearGradient>
+
+      <linearGradient id="goldFrame" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#fff4d4"/>
+        <stop offset="50%"  stop-color="#c9992e"/>
+        <stop offset="100%" stop-color="#8a5f12"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       HEADER
+       ══════════════════════════════════════════════════════════════════════ -->
+  <header>
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="#top">
+          <span class="crest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/>
+              <path d="M12 8.4 15.6 10v4L12 15.6 8.4 14v-4z" fill="url(#gold)" fill-opacity="0.35"/>
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">AabSara</span>
+            <span class="brand-sub">Free · Open Source</span>
+          </span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#comparison">Comparison</a>
+          <a href="#download">Download</a>
+          <a href="#faq">FAQ</a>
+        </div>
+
+        <div class="nav-cta">
+          <a class="btn btn-gold" href="#download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/>
+            </svg>
+            Get it free
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         HERO
+         ════════════════════════════════════════════════════════════════════ -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-panel glass">
+
+          <!-- Gold filigree corners -->
+          <svg class="filigree tl gold-svg" viewBox="0 0 120 120" fill="none" stroke="url(#goldSoft)" stroke-width="2.8" stroke-linecap="round">
+            <path d="M4 66C4 32 32 4 66 4"/>
+            <path d="M4 46C4 22 22 4 46 4" opacity=".65" stroke-width="1.8"/>
+            <path d="M8 52C20 52 30 42 30 30 30 21 23 14 14 14 9 14 6 17 6 22" stroke-width="2.2"/>
+            <path d="M52 8C52 20 42 30 30 30 21 30 14 23 14 14 14 9 17 6 22 6" stroke-width="2.2"/>
+            <path d="M30 6c6 6 6 14 0 20-6-6-6-14 0-20z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M6 30c6 6 14 6 20 0-6-6-14-6-20 0z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M20 20c5-4 11-4 16 0-5 4-11 4-16 0z" fill="url(#gold)" stroke="none"/>
+            <circle cx="15" cy="42" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="42" cy="15" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="30" cy="30" r="2.4" fill="#fff6d8" stroke="none"/>
+            <path d="M62 12c10 2 18 8 22 18" opacity=".5" stroke-width="1.6"/>
+            <path d="M12 62c2-10 8-18 18-22" opacity=".5" stroke-width="1.6"/>
+          </svg>
+          <svg class="filigree tr gold-svg" viewBox="0 0 120 120" fill="none" stroke="url(#goldSoft)" stroke-width="2.8" stroke-linecap="round">
+            <path d="M4 66C4 32 32 4 66 4"/>
+            <path d="M4 46C4 22 22 4 46 4" opacity=".65" stroke-width="1.8"/>
+            <path d="M8 52C20 52 30 42 30 30 30 21 23 14 14 14 9 14 6 17 6 22" stroke-width="2.2"/>
+            <path d="M52 8C52 20 42 30 30 30 21 30 14 23 14 14 14 9 17 6 22 6" stroke-width="2.2"/>
+            <path d="M30 6c6 6 6 14 0 20-6-6-6-14 0-20z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M6 30c6 6 14 6 20 0-6-6-14-6-20 0z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M20 20c5-4 11-4 16 0-5 4-11 4-16 0z" fill="url(#gold)" stroke="none"/>
+            <circle cx="15" cy="42" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="42" cy="15" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="30" cy="30" r="2.4" fill="#fff6d8" stroke="none"/>
+            <path d="M62 12c10 2 18 8 22 18" opacity=".5" stroke-width="1.6"/>
+            <path d="M12 62c2-10 8-18 18-22" opacity=".5" stroke-width="1.6"/>
+          </svg>
+          <svg class="filigree bl gold-svg" viewBox="0 0 120 120" fill="none" stroke="url(#goldSoft)" stroke-width="2.8" stroke-linecap="round">
+            <path d="M4 66C4 32 32 4 66 4"/>
+            <path d="M4 46C4 22 22 4 46 4" opacity=".65" stroke-width="1.8"/>
+            <path d="M8 52C20 52 30 42 30 30 30 21 23 14 14 14 9 14 6 17 6 22" stroke-width="2.2"/>
+            <path d="M52 8C52 20 42 30 30 30 21 30 14 23 14 14 14 9 17 6 22 6" stroke-width="2.2"/>
+            <path d="M30 6c6 6 6 14 0 20-6-6-6-14 0-20z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M6 30c6 6 14 6 20 0-6-6-14-6-20 0z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M20 20c5-4 11-4 16 0-5 4-11 4-16 0z" fill="url(#gold)" stroke="none"/>
+            <circle cx="15" cy="42" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="42" cy="15" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="30" cy="30" r="2.4" fill="#fff6d8" stroke="none"/>
+            <path d="M62 12c10 2 18 8 22 18" opacity=".5" stroke-width="1.6"/>
+            <path d="M12 62c2-10 8-18 18-22" opacity=".5" stroke-width="1.6"/>
+          </svg>
+          <svg class="filigree br gold-svg" viewBox="0 0 120 120" fill="none" stroke="url(#goldSoft)" stroke-width="2.8" stroke-linecap="round">
+            <path d="M4 66C4 32 32 4 66 4"/>
+            <path d="M4 46C4 22 22 4 46 4" opacity=".65" stroke-width="1.8"/>
+            <path d="M8 52C20 52 30 42 30 30 30 21 23 14 14 14 9 14 6 17 6 22" stroke-width="2.2"/>
+            <path d="M52 8C52 20 42 30 30 30 21 30 14 23 14 14 14 9 17 6 22 6" stroke-width="2.2"/>
+            <path d="M30 6c6 6 6 14 0 20-6-6-6-14 0-20z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M6 30c6 6 14 6 20 0-6-6-14-6-20 0z" fill="url(#gold)" stroke="none" opacity=".9"/>
+            <path d="M20 20c5-4 11-4 16 0-5 4-11 4-16 0z" fill="url(#gold)" stroke="none"/>
+            <circle cx="15" cy="42" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="42" cy="15" r="3.2" fill="url(#gold)" stroke="none"/>
+            <circle cx="30" cy="30" r="2.4" fill="#fff6d8" stroke="none"/>
+            <path d="M62 12c10 2 18 8 22 18" opacity=".5" stroke-width="1.6"/>
+            <path d="M12 62c2-10 8-18 18-22" opacity=".5" stroke-width="1.6"/>
+          </svg>
+
+          <div class="crest-medallion">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/>
+              <path d="M12 8.4 15.6 10v4L12 15.6 8.4 14v-4z" fill="url(#gold)" fill-opacity="0.4" stroke="none"/>
+              <circle cx="12" cy="12" r="1.4" fill="#fff6d8" stroke="none"/>
+            </svg>
+          </div>
+
+          <span class="eyebrow">Open Source · MIT License · No Account</span>
+
+          <h1 class="display">AabSara</h1>
+          <p class="hero-tag">One Recorder · Zero Cost</p>
+
+          <p class="hero-sub">
+            A free, open-source screen &amp; game recorder with
+            <strong>4K&nbsp;@&nbsp;120&nbsp;FPS</strong>, hardware GPU encoding, green-screen compositing
+            and multi-destination live streaming — every premium feature the paid recorders
+            charge $40–$300 a year for, shipped in a <strong>1.85&nbsp;MB</strong> binary.
+          </p>
+
+          <div class="hero-cta">
+            <a class="btn btn-gold" href="#download">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/>
+              </svg>
+              Download free
+            </a>
+            <a class="btn btn-glass" href="https://github.com/CyberPrince-glitch/AabSara" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 19.9 4 4.9 4.9 0 0 0 19.8.5S18.4.1 15 1.8a13.4 13.4 0 0 0-6 0C5.6.1 4.2.5 4.2.5A4.9 4.9 0 0 0 4.1 4a5.2 5.2 0 0 0-1.4 3.7c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V21"/>
+              </svg>
+              View source
+            </a>
+          </div>
+
+          <div class="hero-proof">
+            <span class="proof-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+              No watermark
+            </span>
+            <span class="proof-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+              No subscription
+            </span>
+            <span class="proof-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+              Cross-platform
+            </span>
+            <span class="proof-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>
+              Ultra-low RAM
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         VINE DIVIDER
+         ════════════════════════════════════════════════════════════════════ -->
+    <div class="container">
+      <div class="vine-divider">
+        <svg viewBox="0 0 520 44" fill="none" stroke="url(#goldSoft)" stroke-width="2" stroke-linecap="round">
+          <path d="M4 22h168"/>
+          <path d="M516 22H348"/>
+          <path d="M180 22c14-12 30-12 44 0-14 12-30 12-44 0z"/>
+          <path d="M340 22c-14-12-30-12-44 0 14 12 30 12 44 0z"/>
+          <path d="M260 4l16 18-16 18-16-18z" fill="url(#gold)" stroke="none"/>
+          <path d="M260 11l8 11-8 11-8-11z" fill="#fff6d8" stroke="none" opacity=".8"/>
+          <circle cx="236" cy="22" r="3.4" fill="url(#gold)" stroke="none"/>
+          <circle cx="284" cy="22" r="3.4" fill="url(#gold)" stroke="none"/>
+          <path d="M226 22c-9-10-20-10-29 0" opacity=".7" stroke-width="1.6"/>
+          <path d="M294 22c9-10 20-10 29 0" opacity=".7" stroke-width="1.6"/>
+          <path d="M192 22c6-8 14-8 20 0" opacity=".55" stroke-width="1.4"/>
+          <path d="M328 22c-6-8-14-8-20 0" opacity=".55" stroke-width="1.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         FEATURES — liquid glass grid
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="features" style="margin-top:70px;">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">The Arsenal</span>
+          <h2>Everything The Paid Apps <em>Sell You</em></h2>
+          <p>Six pillars that make AabSara a genuine replacement — not a trial, not a demo, not a stripped tier.</p>
+        </div>
+
+        <div class="grid-features">
+
+          <!-- 01 -->
+          <article class="fcard t-violet glass glass--live">
+            <div class="fnum">01</div>
+            <h3>Precision Capture</h3>
+            <p>Frame-accurate 4K recording at up to 120&nbsp;FPS with sub-millisecond timing — no dropped frames in fast gameplay.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <rect x="24" y="20" width="62" height="42" rx="9" fill="url(#violetGlass)" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/>
+              <rect x="32" y="34" width="62" height="42" rx="9" fill="url(#violetGlass2)" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+              <rect x="40" y="48" width="62" height="42" rx="9" fill="url(#violetGlass3)" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+              <defs>
+                <linearGradient id="violetGlass"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a78bfa" stop-opacity=".55"/><stop offset="100%" stop-color="#4c1d95" stop-opacity=".28"/></linearGradient>
+                <linearGradient id="violetGlass2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".42"/><stop offset="100%" stop-color="#5b21b6" stop-opacity=".22"/></linearGradient>
+                <linearGradient id="violetGlass3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ddd6fe" stop-opacity=".3"/><stop offset="100%" stop-color="#6d28d9" stop-opacity=".16"/></linearGradient>
+              </defs>
+            </svg>
+          </article>
+
+          <!-- 02 -->
+          <article class="fcard t-azure glass glass--live">
+            <div class="fnum">02</div>
+            <h3>GPU Encoding</h3>
+            <p>Native NVENC, AMD AMF and Intel QuickSync pipelines keep CPU load near zero while the machine stays playable.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <rect x="26" y="24" width="60" height="60" rx="12" fill="url(#skyPane)" stroke="rgba(255,255,255,0.42)" stroke-width="1.2"/>
+              <path d="M26 62c10-7 16 4 26-3s16 6 24-1v26H26z" fill="rgba(255,255,255,0.14)"/>
+              <circle cx="72" cy="72" r="14" fill="rgba(59,130,246,0.34)" stroke="rgba(255,255,255,0.65)" stroke-width="1.4"/>
+              <path d="m70 65 8 7-8 7" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </article>
+
+          <!-- 03 -->
+          <article class="fcard t-cyan glass glass--live">
+            <div class="fnum">03</div>
+            <h3>Depth &amp; Layers</h3>
+            <p>Stack a camera, a game window and a webcam on separate layers, each with its own crop, opacity and blend mode.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <path d="M60 26 96 46 60 66 24 46z" fill="url(#cyanG1)" stroke="rgba(255,255,255,0.55)" stroke-width="1.1"/>
+              <path d="M60 42 96 62 60 82 24 62z" fill="url(#cyanG2)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+              <path d="M60 58 96 78 60 98 24 78z" fill="url(#cyanG3)" stroke="rgba(255,255,255,0.3)" stroke-width="1.1"/>
+              <defs>
+                <linearGradient id="cyanG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#67e8f9" stop-opacity=".6"/><stop offset="100%" stop-color="#0e7490" stop-opacity=".3"/></linearGradient>
+                <linearGradient id="cyanG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a5f3fc" stop-opacity=".45"/><stop offset="100%" stop-color="#155e75" stop-opacity=".25"/></linearGradient>
+                <linearGradient id="cyanG3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#cffafe" stop-opacity=".32"/><stop offset="100%" stop-color="#164e63" stop-opacity=".18"/></linearGradient>
+              </defs>
+            </svg>
+          </article>
+
+          <!-- 04 -->
+          <article class="fcard t-rose glass glass--live">
+            <div class="fnum">04</div>
+            <h3>Light &amp; Glow</h3>
+            <p>Studio-grade look in one click: soft bloom, chromatic highlights and a light-linked vignette that reads as studio-lit.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <circle cx="60" cy="60" r="32" fill="url(#orb)"/>
+              <ellipse cx="48" cy="46" rx="11" ry="8" fill="#fff" fill-opacity=".55" transform="rotate(-28 48 46)"/>
+              <circle cx="60" cy="60" r="32" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+              <path d="M60 20v6M60 94v6M20 60h6M94 60h6" stroke="rgba(255,255,255,0.45)" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </article>
+
+          <!-- 05 -->
+          <article class="fcard t-ember glass glass--live">
+            <div class="fnum">05</div>
+            <h3>Green Screen</h3>
+            <p>Chroma-key the background in real time with edge refinement, spill suppression and preset light sources.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <rect x="22" y="30" width="60" height="48" rx="9" fill="url(#emberG)" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/>
+              <circle cx="40" cy="50" r="6" fill="rgba(255,255,255,0.55)"/>
+              <path d="M28 72l14-16 12 12 10-9 14 13" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+              <rect x="38" y="38" width="60" height="48" rx="9" fill="url(#emberG2)" stroke="rgba(255,255,255,0.32)" stroke-width="1.1"/>
+              <defs>
+                <linearGradient id="emberG"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".55"/><stop offset="100%" stop-color="#7c2d12" stop-opacity=".3"/></linearGradient>
+                <linearGradient id="emberG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde68a" stop-opacity=".4"/><stop offset="100%" stop-color="#9a3412" stop-opacity=".24"/></linearGradient>
+              </defs>
+            </svg>
+          </article>
+
+          <!-- 06 -->
+          <article class="fcard t-gold glass glass--live">
+            <div class="fnum">06</div>
+            <h3>Stream Anywhere</h3>
+            <p>Push one capture to YouTube, Twitch, Kick and RTMP targets at once — with built-in overlays and a dual audio mixer.</p>
+            <svg class="illus" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+              <rect x="26" y="30" width="60" height="48" rx="9" fill="url(#goldG)" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/>
+              <rect x="34" y="40" width="60" height="48" rx="9" fill="url(#goldG2)" stroke="rgba(255,255,255,0.32)" stroke-width="1.1"/>
+              <path d="M58 52 78 64 58 76z" fill="#fff" fill-opacity=".9"/>
+              <defs>
+                <linearGradient id="goldG"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde68a" stop-opacity=".5"/><stop offset="100%" stop-color="#78350f" stop-opacity=".28"/></linearGradient>
+                <linearGradient id="goldG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fef3c7" stop-opacity=".42"/><stop offset="100%" stop-color="#92400e" stop-opacity=".24"/></linearGradient>
+              </defs>
+            </svg>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         COMPARISON — gold-framed ledger
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="comparison" style="margin-top:96px;">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">The Ledger</span>
+          <h2>Same Features. <em>One-Third The Price.</em></h2>
+          <p>Line by line against the recorders everyone already pays for. The gold column is the one that costs nothing.</p>
+        </div>
+
+        <p class="cmp-scroll-hint">Swipe the table to compare</p>
+
+        <div class="ledger glass">
+          <div class="ledger-inner">
+            <table class="cmp">
+              <thead>
+                <tr>
+                  <th class="feat">Capability</th>
+                  <th class="ours">AabSara</th>
+                  <th class="paid">Action!<span class="price">$37 / yr</span></th>
+                  <th class="paid">Bandicam<span class="price">$49 / yr</span></th>
+                  <th class="paid">Camtasia<span class="price">$299 / yr</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="feat">4K @ 120 FPS capture</td>
+                  <td class="ours">Included</td>
+                  <td class="paid"><span class="yes">4K only</span></td>
+                  <td class="paid"><span class="yes">4K only</span></td>
+                  <td class="paid"><span class="yes">4K only</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Hardware GPU encoding</td>
+                  <td class="ours">NVENC · AMF · QuickSync</td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Green screen / chroma key</td>
+                  <td class="ours">Included</td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Live streaming</td>
+                  <td class="ours">Multi-destination</td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Built-in stream overlays</td>
+                  <td class="ours">Included</td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Dual audio mixer</td>
+                  <td class="ours">Included</td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="yes">Yes</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Watermark</td>
+                  <td class="ours">Never</td>
+                  <td class="paid"><span class="yes">On free tier</span></td>
+                  <td class="paid"><span class="yes">On free tier</span></td>
+                  <td class="paid"><span class="yes">On free tier</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Cross-platform</td>
+                  <td class="ours">Win · Linux · macOS</td>
+                  <td class="paid"><span class="yes">Windows only</span></td>
+                  <td class="paid"><span class="yes">Windows only</span></td>
+                  <td class="paid"><span class="yes">Win · macOS</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Open source</td>
+                  <td class="ours">MIT License</td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                  <td class="paid"><span class="no">✕</span></td>
+                </tr>
+                <tr>
+                  <td class="feat">Price</td>
+                  <td class="ours"><strong style="font-family:'Cinzel',serif;font-size:19px">$0</strong></td>
+                  <td class="paid">$37</td>
+                  <td class="paid">$49</td>
+                  <td class="paid">$299</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="verdict">
+              <strong>Equivalent paid stack: $385+ per year.</strong>
+              <span>AabSara is free, MIT-licensed and auditable — forever.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         DOWNLOAD — tall gold-framed cards
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="download" style="margin-top:96px;">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">Claim It</span>
+          <h2>Download <em>Free</em> — Right Now</h2>
+          <p>No sign-up, no trial clock, no feature gate. Grab the binary and record.</p>
+        </div>
+
+        <div class="grid-dl">
+
+          <article class="dcard t-gold glass glass--live">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                <path d="M3 5.5 10.5 4.6v7.1H3zM12.5 4.3 21 3.4v8.3h-8.5zM3 13.7h7.5v7.1L3 19.9zM12.5 13.7H21v8.3l-8.5-.9z"/>
+              </svg>
+            </div>
+            <h3>Windows Installer</h3>
+            <p class="meta">2.26 MB · Setup Wizard</p>
+            <a class="btn btn-gold" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Installer.exe" target="_blank" rel="noopener">Download .exe</a>
+          </article>
+
+          <article class="dcard t-azure glass glass--live">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                <path d="M4 4.5 11 4v7H4zM13 3.7 20 3.2v7.8h-7zM4 13h7v7l-7-.5zM13 13h7v7.5l-7-.5z"/>
+              </svg>
+            </div>
+            <h3>Windows Portable</h3>
+            <p class="meta">6.41 MB · Standalone EXE</p>
+            <a class="btn btn-glass" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_Portable.exe" target="_blank" rel="noopener">Download .exe</a>
+          </article>
+
+          <article class="dcard t-cyan glass glass--live">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <h3>Android APK</h3>
+            <p class="meta">12.2 MB · arm64-v8a</p>
+            <a class="btn btn-gold" href="https://github.com/CyberPrince-glitch/AabSara/releases/download/v1.0.0/AabSara_v1.0.0_arm64.apk" target="_blank" rel="noopener">Download .apk</a>
+          </article>
+
+          <article class="dcard t-rose glass glass--live soon">
+            <div class="dicon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 18c-3 0-5-1.6-5-4 0-2 1.4-3.4 3.2-3.7C6 8.6 7 6.4 9.4 6.4c1.5 0 2.4.7 3 1.6.5-1.5 1.8-2.6 3.6-2.6 2 0 3.4 1.4 3.5 3.3 1.3.4 2.1 1.4 2.1 2.7 0 1.6-1.3 2.8-3 2.8"/>
+                <path d="M9 13h2l1.5 2.5L14 13h2"/>
+              </svg>
+            </div>
+            <h3>Linux &amp; macOS</h3>
+            <p class="meta">AppImage · Apple Silicon</p>
+            <span class="btn btn-line">Coming soon</span>
+          </article>
+
+        </div>
+
+        <p class="dl-note">No account required. <b>No watermarks. No subscription. Ever.</b></p>
+
+        <!-- ── Litecoin (LTC) Creator Support ── -->
+        <div style="margin-top:48px; padding:32px; border-radius:24px; background:linear-gradient(135deg, rgba(224,182,74,0.08) 0%, rgba(139,92,246,0.06) 100%); border:1px solid rgba(224,182,74,0.3); text-align:center;">
+          <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:99px; background:rgba(224,182,74,0.15); border:1px solid rgba(224,182,74,0.4); color:var(--gold); font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:14px;">
+            🪙 Support Independent Open Source
+          </div>
+          <h3 style="font-family:'Cinzel', serif; font-size:26px; color:#fff; margin-bottom:10px;">Support AabSara via <span style="color:var(--gold);">Litecoin (LTC)</span></h3>
+          <p style="max-width:640px; margin:0 auto 20px; font-size:15px; color:var(--ink-dim);">
+            AabSara is 100% free and open source. Zero middleman fees, zero ads. Support continuous updates, Android optimizations, and new features directly via Litecoin:
+          </p>
+          <div style="display:inline-flex; align-items:center; flex-wrap:wrap; justify-content:center; gap:12px; background:rgba(5,6,14,0.85); padding:10px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.15);">
+            <span style="font-family:monospace; font-size:14px; color:var(--gold); letter-spacing:0.04em; word-break:break-all;">LKbYGyKFQsMtxP4ezZky5Q2DPMbGxqKKyp</span>
+            <button id="copy-ltc-btn" onclick="navigator.clipboard.writeText('LKbYGyKFQsMtxP4ezZky5Q2DPMbGxqKKyp').then(()=>{this.innerText='✓ Copied!'; setTimeout(()=>{this.innerText='Copy LTC Address';}, 2500);})" style="background:var(--gold); color:#000; font-weight:700; font-size:13px; padding:7px 16px; border:none; border-radius:8px; cursor:pointer; transition:all 0.2s;">Copy LTC Address</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         FAQ
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="faq" style="margin-top:96px;">
+      <div class="container">
+        <div class="sec-head">
+          <span class="eyebrow">Ask Away</span>
+          <h2>Frequently <em>Asked</em></h2>
+        </div>
+
+        <div class="faq-wrap">
+
+          <div class="faq-item glass">
+            <div class="faq-q">Is AabSara really free, or is it a trial?<span class="chev">+</span></div>
+            <div class="faq-a"><div class="faq-a-inner">Genuinely free, forever, under the MIT License. There is no trial period, no feature gate and no account. The project is community-funded by people who want a recorder without a subscription.</div></div>
+          </div>
+
+          <div class="faq-item glass">
+            <div class="faq-q">How does it beat Action! and Bandicam?<span class="chev">+</span></div>
+            <div class="faq-a"><div class="faq-a-inner">Those apps charge $37–$49 a year for a subset of what AabSara ships. AabSara adds green-screen compositing, multi-destination streaming and built-in stream overlays — features that only appear in the $299 Camtasia tier — and runs on Linux and macOS too.</div></div>
+          </div>
+
+          <div class="faq-q-holder"></div>
+
+          <div class="faq-item glass">
+            <div class="faq-q">Will recording hurt my game performance?<span class="chev">+</span></div>
+            <div class="faq-a"><div class="faq-a-inner">No. Capture and encoding happen on the GPU through NVENC, AMD AMF or Intel QuickSync, so the CPU stays nearly idle and your frame rate barely moves. The Rust/Tauri core is designed around a low memory footprint.</div></div>
+          </div>
+
+          <div class="faq-item glass">
+            <div class="faq-q">Can I record games in 4K at 120 FPS?<span class="chev">+</span></div>
+            <div class="faq-a"><div class="faq-a-inner">Yes. AabSara supports 4K at up to 120 frames per second with full hardware encoding. Your refresh rate, GPU encoder and disk speed are the real limits.</div></div>
+          </div>
+
+          <div class="faq-item glass">
+            <div class="faq-q">Where can I see the source code?<span class="chev">+</span></div>
+            <div class="faq-a"><div class="faq-a-inner">On GitHub at <a href="https://github.com/CyberPrince-glitch/AabSara" style="color:var(--gold)">github.com/CyberPrince-glitch/AabSara</a>. The full Rust Tauri backend, React + TypeScript frontend and build scripts are public and open to modification and contribution.</div></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="foot-top">
+        <a class="brand" href="#top">
+          <span class="crest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/>
+              <path d="M12 8.4 15.6 10v4L12 15.6 8.4 14v-4z" fill="url(#gold)" fill-opacity="0.35"/>
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">AabSara</span>
+            <span class="brand-sub">Free · Open Source</span>
+          </span>
+        </a>
+
+        <div class="foot-links">
+          <a href="#features">Features</a>
+          <a href="#comparison">Comparison</a>
+          <a href="#download">Download</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://github.com/CyberPrince-glitch/AabSara" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        AabSara is open source under the MIT License · Built with Rust, Tauri, React &amp; TypeScript<br/>
+        Created by Cyber Prince / CyberPrince-Alien
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── FAQ accordion ────────────────────────────────────────────────────
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.closest('.faq-item');
+        const open = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!open) item.classList.add('open');
+      });
+    });
+
+    // ── Cursor-tracking light bloom on liquid glass cards ─────────────────
+    document.querySelectorAll('.glass--live').forEach(card => {
+      card.addEventListener('pointermove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+      });
+    });
+
+    // ── Reveal on scroll ─────────────────────────────────────────────────
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.style.opacity = '1';
+          en.target.style.transform = 'none';
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fcard, .dcard, .ledger, .faq-item').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .7s cubic-bezier(.2,.7,.3,1) ' + (i % 4) * 70 + 'ms, transform .7s cubic-bezier(.2,.7,.3,1) ' + (i % 4) * 70 + 'ms';
+      io.observe(el);
+    });
+  </script>
+
+</body>
 </html>
