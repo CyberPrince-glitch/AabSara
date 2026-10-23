@@ -2,7 +2,7 @@
 
   <img src="public/aabsara_logo.png" alt="AabSara Logo" width="140" style="border-radius: 28px; box-shadow: 0 10px 30px rgba(224, 182, 74, 0.35);" />
 
-  # 🎬 AabSara (আবসার)
+  # 🎬 AabSara (আবসারা)
   ### The Ultimate 4K@120FPS Screen Recorder, RTMP Live Streamer & Video Editor Suite
 
   <p align="center">
